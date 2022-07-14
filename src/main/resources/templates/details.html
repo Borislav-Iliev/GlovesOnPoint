@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <th:block th:include="~{fragments/meta-info}">Meta</th:block>
+</head>
+
+<body class="details">
+
+<th:block th:include="~{fragments/navbar}">Navbar</th:block>
+
+<div class="container main-news">
+    <div class="row">
+        <div class="col-8"
+             th:object="${post}">
+            <h1
+                    th:text="*{title}">
+            </h1>
+            <small
+                    th:text="*{date}">
+            </small>
+
+            <img th:src="@{*{imageUrl}}" class="mt-3 details-image">
+            <div class="story mt-4">
+                <p
+                        th:text="*{content}">
+                </p>
+                <p
+                        th:text="*{content}">
+                </p>
+                <p
+                        th:text="*{content}">
+                </p>
+                <p
+                        th:text="*{content}">
+                </p>
+            </div>
+            <hr>
+
+        </div>
+    </div>
+</div>
+</body>
+
+</html>

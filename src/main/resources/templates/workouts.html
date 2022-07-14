@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <th:block th:include="~{fragments/meta-info}">Meta</th:block>
+</head>
+
+<body class="workouts">
+
+<th:block th:include="~{fragments/navbar}">Navbar</th:block>
+
+<div class="container">
+    <div class="row justify-content-center">
+        <a th:href="@{/workouts}">
+            <button type="button" class="home-button"><span class="home-button-span"></span> All</button>
+        </a>
+        <a th:href="@{/workouts/easy}">
+            <button type="button" class="home-button"><span class="home-button-span"></span> Easy</button>
+        </a>
+        <a th:href="@{/workouts/intermediate}">
+            <button type="button" class="home-button"><span class="home-button-span"></span> Intermediate</button>
+        </a>
+        <a th:href="@{/workouts/hard}">
+            <button type="button" class="home-button"><span class="home-button-span"></span> Hard</button>
+        </a>
+        <a sec:authorize="hasRole('USER')" th:href="@{/workouts/add}">
+            <button type="button" class="home-button"><span class="home-button-span"></span> Add Course</button>
+        </a>
+    </div>
+
+    <div class="row">
+        <div class="col-md-3" th:each="w : ${workouts}">
+            <div class="card mb-4 box-shadow">
+                <img th:src="@{${w.imageUrl}}" class="card-img-top" alt="Thumbnail [100%x225]"
+                     data-holder-rendered="true"
+                     style="height: 225px; width: 100%; display: block;">
+                <div class="card-body">
+                    <div class="text-center">
+                        <p class="card-text border-bottom "><span th:text="${w.level}"></span></p>
+                        <p class="card-text border-bottom "><span th:text="${w.content}"></span></p>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="btn-group">
+                            <a type="button" class="btn btn-sm btn-outline-secondary"
+                               th:href="@{/workouts/delete/{id}(id = ${w.id})}">Delete</a>
+                        </div>
+                        <div class="btn-group">
+                            <a type="button" class="btn btn-sm btn-outline-secondary"
+                               th:href="@{/workouts/view/{id}(id = ${w.id})}">View</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+
+</html>

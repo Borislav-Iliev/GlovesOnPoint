@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <th:block th:include="~{fragments/meta-info}">Meta</th:block>
+</head>
+
+<body class="forum">
+
+<th:block th:include="~{fragments/navbar}">Navbar</th:block>
+
+<div class="container">
+
+    <h1 class="text-white text-center border-bottom">Welcome to the Forum Page!</h1>
+
+    <div class="row">
+        <div class="col">
+            <h3 class="text-white">Search by text:</h3>
+            <input
+                    id="search"
+                    class="form-control w-50"
+                    type="search"
+                    placeholder="Search...">
+        </div>
+        <div class="col d-flex justify-content-center">
+            <a th:href="@{/forum/posts/add}">
+                <button type="button" class="home-button"><span class="home-button-span"></span> Add Post</button>
+            </a>
+        </div>
+        <div class="col">
+            <h3 class="text-white text-right">Chose Category:</h3>
+            <select
+                    id="postCategory"
+                    name="postCategory"
+                    class="form-control w-50 float-right">
+                <option value="">- Select Category -</option>
+                <option th:each="c : ${T (bg.softuni.kickboxing.model.enums.PostCategoryEnum).values()}"
+                        th:text="${c}"
+                        th:value="${c}"
+                        th:selected="${c} == *{category}">
+                    Post Category
+                </option>
+            </select>
+        </div>
+    </div>
+</div>
+
+<div class="container mt-1" style="background-color: #009688">
+    <div class="row">
+        <div class="col">
+            <h4 class="text-white">Author</h4>
+        </div>
+        <div class="col">
+            <h4 class="text-white">Title</h4>
+        </div>
+        <div class="col">
+            <h4 class="text-white">Category</h4>
+        </div>
+        <div class="col">
+            <h4 class="text-white">Views</h4>
+        </div>
+        <div class="col">
+            <h4 class="text-white">Created On</h4>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row border-bottom" th:each="p : ${posts}">
+        <div class="col mt-1">
+            <img src="" alt="profilePic">
+            <p class="text-white"
+               th:text="${p.authorUsername}">
+            </p>
+        </div>
+        <div class="col mt-1">
+            <a th:href="@{/forum/posts/{id}(id = ${p.id})}">
+                <p class="text-white"
+                   th:text="${p.title}">
+                </p>
+            </a>
+        </div>
+        <div class="col mt-1">
+            <p class="text-white"
+               th:text="${p.category}">
+            </p>
+        </div>
+        <div class="col mt-1">
+            <p class="text-white"
+               th:text="${p.views}">
+            </p>
+        </div>
+        <div class="col mt-1">
+            <p class="text-white"
+               th:text="${#p.createdOn}">
+            </p>
+        </div>
+    </div>
+</div>
+
+</body>
+
+</html>

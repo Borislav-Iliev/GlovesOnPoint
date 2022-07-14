@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<nav class="navbar, navbar">
+    <a th:href="@{/}">
+        <p class="navbar-brand, logo">Kickboxing</p>
+    </a>
+
+    <ul class=" justify-content-between">
+        <li class="nav-item">
+            <a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{/forum}">Forum</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{/workouts}">Training</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{/news}">News</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{/users/profile}">Profile</a>
+        </li>
+        <li class="nav-item">
+            <form class="logout-form" sec:authorize="isAuthenticated()" th:method="post" th:action="@{/users/logout}">
+                <input class="logout-button nav-link" type="submit" value="Logout">
+            </form>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" sec:authorize="!isAuthenticated()" th:href="@{/users/login}">Login</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" sec:authorize="!isAuthenticated()" th:href="@{/users/register}">Register</a>
+        </li>
+    </ul>
+</nav>
+
+</html>

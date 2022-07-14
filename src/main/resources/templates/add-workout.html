@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <th:block th:include="~{fragments/meta-info}">Meta</th:block>
+</head>
+
+<body class="add-workout">
+
+<th:block th:include="~{fragments/navbar}">Meta</th:block>
+
+<div class="container">
+    <h2 class="text-center text-white">Add Workout</h2>
+    <form
+            th:action="@{/workouts/add}"
+            th:method="post"
+            th:object="${addWorkoutModel}"
+            class="main-form mx-auto col-md-8 d-flex flex-column justify-content-center">
+        <div class="form-group">
+            <label for="imageUrl" class="text-white font-weight-bold">ImageUrl</label>
+            <input
+                    id="imageUrl"
+                    name="imageUrl"
+                    type="text"
+                    class="form-control"
+                    placeholder="ImageUrl"/>
+            <div class="invalid-feedback errors alert alert-danger">
+                <p
+                        th:each="err : ${#fields.errors('imageUrl')}"
+                        th:text="${err}">
+                </p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="content" class="text-white font-weight-bold">Content</label>
+            <input
+                    id="content"
+                    name="content"
+                    type="text"
+                    class="form-control"
+                    placeholder="Content"/>
+            <div class="invalid-feedback errors alert alert-danger">
+                <p
+                        th:each="err : ${#fields.errors('content')}"
+                        th:text="${err}">
+                </p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="text-center text-white font-weight-bold" for="level">Workout Level</label>
+            <select
+                    id="level"
+                    name="level"
+                    class="form-control">
+                <option value="">- Select Workout level -</option>
+                <option th:each="l : ${T (bg.softuni.kickboxing.model.enums.WorkoutLevelEnum).values()}"
+                        th:text="${l}"
+                        th:value="${l}"
+                        th:selected="${l} == *{level}">
+                    Workout level
+                </option>
+            </select>
+            <div class="invalid-feedback errors alert alert-danger">
+                <p
+                        th:each="err : ${#fields.errors('level')}"
+                        th:text="${err}">
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col col-md-4">
+                <div class="button-holder d-flex">
+                    <input type="submit" class="btn btn-info btn-lg" value="Add Workout"/>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+</body>
+
+</html>
