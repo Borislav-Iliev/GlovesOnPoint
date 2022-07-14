@@ -9,7 +9,7 @@ import javax.validation.constraints.Size;
 
 public class AddWorkoutDTO {
 
-    @NotNull(message = "WorkoutLevel must be selected!")
+    @NotNull(message = "Workout level must be selected!")
     private WorkoutLevelEnum level;
 
     @NotBlank(message = "Content must be provided!")

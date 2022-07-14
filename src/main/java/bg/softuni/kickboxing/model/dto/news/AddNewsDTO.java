@@ -1,5 +1,7 @@
 package bg.softuni.kickboxing.model.dto.news;
 
+import org.hibernate.validator.constraints.URL;
+
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
@@ -14,6 +16,7 @@ public class AddNewsDTO {
     private String content;
 
     @NotBlank(message = "ImageUrl must be provided!")
+    @URL(message = "Must be a valid url!")
     private String imageUrl;
 
     public AddNewsDTO() {
