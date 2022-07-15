@@ -12,7 +12,7 @@
 <th:block th:include="~{fragments/navbar}">Navbar</th:block>
 
 <div class="container d-flex justify-content-center">
-    <div sec:authorize="hasRole('ADMIN')">
+    <div sec:authorize="hasRole('MODERATOR')">
         <a th:href="@{/news/add}">
             <button type="button" class="home-button text-white align-content-center mt-0"><span
                     class="home-button-span"></span>
