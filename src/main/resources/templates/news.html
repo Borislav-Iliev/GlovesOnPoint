@@ -11,10 +11,10 @@
 
 <th:block th:include="~{fragments/navbar}">Navbar</th:block>
 
-<div class="container">
-    <div sec:authorize="hasRole('USER')">
+<div class="container d-flex justify-content-center">
+    <div sec:authorize="hasRole('ADMIN')">
         <a th:href="@{/news/add}">
-            <button type="button" class="home-button text-white align-content-center"><span
+            <button type="button" class="home-button text-white align-content-center mt-0"><span
                     class="home-button-span"></span>
                 Add news
             </button>
@@ -22,41 +22,44 @@
     </div>
 </div>
 
-<div class="container section">
+<div class="container">
     <div class="row">
-        <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
-            <div class="mb-4 mt-4">
-                <div class="section-title">
-                    <span>Latest Updates</span>
+        <div class="col w-75">
+            <h2 class="text-white border-bottom">Latest Updates</h2>
+
+            <div class="row news-row"
+                 th:each="news : ${news}">
+                <div class="col-md-4 col-lg-4 col-sm-12">
+                    <img class="w-100 h-100" th:src="@{${news.imageUrl}}" alt="News Picture">
                 </div>
-                <div class="news-row mb-3 bb-1 pt-0 row"
-                     th:each="news : ${news}">
-                    <div class="col-md-4 col-lg-4 col-sm-12">
-                        <img class="thumb" th:src="@{${news.imageUrl}}">
-                    </div>
-                    <div class="col-md-8 col-lg-8 col-sm-12">
-                        <h5>
-                            <a class="news-link" th:href="@{/news/details/{id}(id = ${news.id})}">
-                                <span
-                                        th:text="${news.title}">
-                                </span>
-                            </a>
-                        </h5>
-                        <small class="news-small"
-                               th:text="${news.date}">
-                        </small>
 
-                        <p class="summary pt-3"
-                           th:text="${news.content}">
-                        </p>
+                <div class="col-md-8 col-lg-8 col-sm-12">
+                    <h5>
+                        <a class="news-link" th:href="@{/news/details/{id}(id = ${news.id})}">
+                              <span
+                                      th:text="${news.title}">
+                              </span>
+                        </a>
+                    </h5>
 
-                        <div class="btn-group">
-                            <a sec:authorize="hasRole('MODERATOR')" type="button" class="btn btn-sm btn-outline-secondary"
-                               th:href="@{/news/delete/{id}(id = ${news.id})}">Delete</a>
-                        </div>
+                    <small class="news-small"
+                           th:text="${news.date}">
+                    </small>
+
+                    <p class="summary pt-3"
+                       th:text="${news.content}">
+                    </p>
+
+                    <div class="btn-group">
+                        <a sec:authorize="hasRole('MODERATOR')" type="button" class="btn btn-sm btn-outline-secondary"
+                           th:href="@{/news/delete/{id}(id = ${news.id})}">Delete</a>
                     </div>
                 </div>
             </div>
+        </div>
+
+        <div class="col-4">
+            <h2 class="text-white border-bottom">Trending</h2>
         </div>
     </div>
 </div>

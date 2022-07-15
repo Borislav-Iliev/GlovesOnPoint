@@ -137,20 +137,9 @@
     width: 100%;
 }
 
-.social-list {
-    display: flex;
-    list-style: none;
-    justify-content: space-evenly;
-    padding: 0
-}
-
-.section {
-    padding-bottom: 20px;
-}
-
 .news-row {
     padding-bottom: 15px;
-    margin-bottom: 15px;
+    margin-bottom: 5px;
     border-bottom: 1px solid #eee;
 }
 
