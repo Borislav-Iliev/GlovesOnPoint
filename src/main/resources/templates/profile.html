@@ -7,58 +7,78 @@
     <th:block th:include="~{fragments/meta-info}">Meta</th:block>
 </head>
 
-<body>
+<body class="profile">
 
-<main class="p-5 align-content-center bg-blur my-register-div, profile">
-    <div class="container mt-5">
-        <div class="row d-flex justify-content-center">
-            <div class="col-md-7">
-                <div class="profile-card p-3 py-4">
-                    <div class="text-center"><img th:src="@{/images/profile.jpg}" width="100" class="rounded-circle" alt="Profile Picture">
-                    </div>
-                    <div class="text-center mt-3">
-                        <span class="bg-secondary p-1 px-4 rounded text-white">
-<!--                              th:text="${#authentication.principal.level.name}">-->
-                            Level
-                        </span>
-                        <h5 class="mt-4 mb-0 text-white">Full name</h5>
-                        <span
-                                >
-                            Fullname
-                        </span>
-                        <h5 class="mt-2 mb-0 text-white">Username</h5>
-                        <span
-                                >
-                            Username
-                        </span>
-                        <h5 class="mt-2 mb-0">Age</h5>
-                        <span
-                                >
-                            Age
-                        </span>
-                        <div class="px-4 mt-5">
-                            <p class="fonts">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Enim et nostrum
-                                optio perferendis quam quod ratione rem sit soluta ut! A dolor laborum, maiores neque
-                                nesciunt quis rerum sunt suscipit. </p>
-                        </div>
-                        <ul class="social-list">
-                            <li><i class="fab fa-facebook-square"></i></li>
-                            <li><i class="fab fa-instagram"></i></li>
-                            <li><i class="fab fa-linkedin"></i></li>
-                            <li><i class="fab fa-google"></i></li>
-                        </ul>
-                        <div class="buttons">
-                            <a th:href="@{/}">
-                                <button class="btn btn-outline-primary px-4">Back</button>
-                            </a>
-                            <!--                            <button class="btn btn-primary px-4 ms-3">Contact</button>-->
-                        </div>
-                    </div>
+<th:block th:include="~{fragments/navbar}">Navbar</th:block>
+
+<div class="d-flex justify-content-center container mt-3">
+    <div class="row w-50">
+        <div class="col">
+
+            <div class="text-center">
+                <img th:src="@{${#authentication.principal.imageUrl}}" width="100" alt="Profile Picture"
+                     class="rounded-circle">
+            </div>
+
+            <div class="text-center">
+                <span class="btn-info rounded text-white p-1 px-2 mt-auto"
+                      th:text="${#authentication.principal.getRole()}">
+                </span>
+            </div>
+
+            <h3 class="text-white border-bottom mt-3">Information</h3>
+
+            <div class="row">
+                <div class="col">
+                    <h4 class="text-white mt-3">Username</h4>
+                    <span class="mt-2 mb-0"
+                          th:text="${#authentication.principal.username}">
+                    </span>
+                </div>
+                <div class="col">
+                    <h4 class="text-white mt-3">Email</h4>
+                    <span class="mt-2 mb-0"
+                          th:text="${#authentication.principal.email}">
+                    </span>
                 </div>
             </div>
+
+            <div class="row">
+                <div class="col">
+                    <h4 class="text-white mt-3">First Name</h4>
+                    <span class="mt-2 mb-0"
+                          th:text="${#authentication.principal.firstName}">
+                    </span>
+                </div>
+                <div class="col">
+                    <h4 class="text-white mt-3">Last Name</h4>
+                    <span class="mt-2 mb-0"
+                          th:text="${#authentication.principal.lastName}">
+                    </span>
+                </div>
+            </div>
+
+            <h3 class="text-white border-bottom mt-3">Stats</h3>
+
+            <div class="row">
+                <div class="col">
+                    <h4 class="text-white mt-3">Posts</h4>
+                    <span class="mt-2 mb-0"
+                          th:text="${#authentication.principal.posts.size}">
+                    </span>
+                </div>
+                <div class="col">
+                    <h4 class="text-white mt-3">Comments</h4>
+                    <span class="mt-2 mb-0"
+                          th:text="${#authentication.principal.comments.size}">
+                    </span>
+                </div>
+            </div>
+
+
         </div>
     </div>
-</main>
+</div>
 
 </body>
 

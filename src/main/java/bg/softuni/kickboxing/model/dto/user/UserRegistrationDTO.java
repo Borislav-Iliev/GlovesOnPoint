@@ -3,6 +3,7 @@ package bg.softuni.kickboxing.model.dto.user;
 import bg.softuni.kickboxing.model.validation.FieldMatch;
 import bg.softuni.kickboxing.model.validation.UniqueEmail;
 import bg.softuni.kickboxing.model.validation.UniqueUsername;
+import org.hibernate.validator.constraints.URL;
 
 import javax.validation.constraints.*;
 
@@ -34,6 +35,8 @@ public class UserRegistrationDTO {
     @NotNull(message = "Age must be provided!")
     @Positive(message = "Age must be positive!")
     private int age;
+
+    private String imageUrl;
 
     @NotBlank(message = "Password must be provided!")
     @Size(min = 3, max = 20, message = "Password length must be between 3 and 20 characters!")
@@ -100,5 +103,13 @@ public class UserRegistrationDTO {
 
     public void setConfirmPassword(String confirmPassword) {
         this.confirmPassword = confirmPassword;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

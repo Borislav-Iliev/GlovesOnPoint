@@ -34,6 +34,9 @@ public class KickboxingUserDetailsService implements UserDetailsService {
                 userEntity.getLastName(),
                 userEntity.getEmail(),
                 userEntity.getPassword(),
+                userEntity.getImageUrl(),
+                userEntity.getPosts(),
+                userEntity.getComments(),
                 userEntity
                         .getUserRoles()
                         .stream()

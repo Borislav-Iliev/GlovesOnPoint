@@ -194,7 +194,7 @@
     height: 163px;
 }
 
-.summary {
+.summary, .profile span {
     color: #777;
 }
 

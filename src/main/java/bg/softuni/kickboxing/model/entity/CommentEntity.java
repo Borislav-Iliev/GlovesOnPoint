@@ -12,6 +12,9 @@ public class CommentEntity extends BaseEntity {
     @ManyToOne
     private PostEntity post;
 
+    @ManyToOne
+    private UserEntity author;
+
     public CommentEntity() {
     }
 
@@ -29,5 +32,13 @@ public class CommentEntity extends BaseEntity {
 
     public void setPost(PostEntity post) {
         this.post = post;
+    }
+
+    public UserEntity getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(UserEntity user) {
+        this.author = user;
     }
 }
