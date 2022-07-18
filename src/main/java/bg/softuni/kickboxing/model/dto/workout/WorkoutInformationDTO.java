@@ -3,7 +3,6 @@ package bg.softuni.kickboxing.model.dto.workout;
 import bg.softuni.kickboxing.model.enums.WorkoutLevelEnum;
 
 public class WorkoutInformationDTO {
-
     private Long id;
     private WorkoutLevelEnum level;
     private String content;

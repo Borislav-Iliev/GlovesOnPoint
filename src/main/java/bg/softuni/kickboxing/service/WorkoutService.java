@@ -35,11 +35,7 @@ public class WorkoutService {
     }
 
     public List<WorkoutInformationDTO> getAllWorkoutsByLevel(WorkoutLevelEnum level) {
-        return this.workoutRepository
-                .findAllByLevel(level)
-                .stream()
-                .map(w -> this.mapper.map(w, WorkoutInformationDTO.class))
-                .toList();
+        return this.workoutRepository.findAllByLevel(level);
     }
 
     public void addWorkout(AddWorkoutDTO addWorkoutDTO, UserDetails userDetails) {
