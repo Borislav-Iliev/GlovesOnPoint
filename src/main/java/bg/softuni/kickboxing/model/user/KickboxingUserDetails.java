@@ -45,7 +45,7 @@ public class KickboxingUserDetails implements UserDetails {
     }
 
     public String getImageUrl() {
-        if (this.imageUrl == null) {
+        if (this.imageUrl == null || this.imageUrl.isBlank()) {
             return "/images/home-page-background.jpg";
         }
         return imageUrl;
@@ -75,7 +75,7 @@ public class KickboxingUserDetails implements UserDetails {
     }
 
     public String getRole() {
-        return this.authorities.toArray()[2].toString().replace("ROLE_", "");
+        return this.authorities.toArray()[this.authorities.size() - 1].toString().replace("ROLE_", "");
     }
 
     @Override

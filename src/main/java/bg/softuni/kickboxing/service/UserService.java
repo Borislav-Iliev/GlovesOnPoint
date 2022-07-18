@@ -23,13 +23,15 @@ public class UserService {
     private final ModelMapper mapper;
     private final PasswordEncoder passwordEncoder;
     private final UserDetailsService userDetailsService;
+    private final EmailService emailService;
 
-    public UserService(UserRepository userRepository, UserRoleService userRoleService, ModelMapper mapper, PasswordEncoder passwordEncoder, UserDetailsService userDetailsService) {
+    public UserService(UserRepository userRepository, UserRoleService userRoleService, ModelMapper mapper, PasswordEncoder passwordEncoder, UserDetailsService userDetailsService, EmailService emailService) {
         this.userRepository = userRepository;
         this.userRoleService = userRoleService;
         this.mapper = mapper;
         this.passwordEncoder = passwordEncoder;
         this.userDetailsService = userDetailsService;
+        this.emailService = emailService;
     }
 
     public void registerAndLogin(UserRegistrationDTO userRegistrationDTO) {
@@ -42,6 +44,8 @@ public class UserService {
 
         this.userRepository.save(newUser);
         login(newUser);
+        this.emailService.sendRegistrationEmail(newUser.getEmail(),
+                newUser.getFirstName() + " " + newUser.getLastName());
     }
 
     public void login(UserEntity userEntity) {
