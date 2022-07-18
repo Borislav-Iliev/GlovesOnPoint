@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <th:block th:include="~{fragments/meta-info}">Meta</th:block>
+</head>
+
+<body class="admin">
+
+<th:block th:include="~{fragments/navbar}">Navbar</th:block>
+
+<div class="container">
+    <div class="row justify-content-center">
+        <a th:href="@{/admin/posts}">
+            <button type="button" class="home-button"><span class="home-button-span"></span> Approve posts</button>
+        </a>
+        <a th:href="@{/admin/comments}">
+            <button type="button" class="home-button"><span class="home-button-span"></span> Approve comments</button>
+        </a>
+        <a th:href="@{/admin/moderators}">
+            <button type="button" class="home-button"><span class="home-button-span"></span> Approve moderators</button>
+        </a>
+    </div>
+</div>
+
+<div class="container">
+
+    <div class="row mt-3 border-bottom"
+         th:each="p : ${posts}">
+        <div class="col">
+
+            <div class="row">
+                <div class="col mt-1">
+                    <img th:src="@{${#authentication.principal.imageUrl}}" width="30" alt="profilePic">
+                    <p class="text-white"
+                       th:text="${p.authorUsername}">
+                    </p>
+                </div>
+                <div class="col mt-1">
+                    <a th:href="@{/forum/posts/{id}(id = ${p.id})}">
+                        <p class="text-white"
+                           th:text="${p.title}">
+                        </p>
+                    </a>
+                </div>
+                <div class="col mt-1">
+                    <p class="text-white"
+                       th:text="${p.category}">
+                    </p>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="col col-3 mb-1">
+            <a class="btn btn-success" type="button" th:href="@{/admin/posts/approve/{id}(id = ${p.id})}">
+                Approve
+            </a>
+            <a class="btn btn-danger" type="button" th:href="@{/admin/posts/disapprove/{id}(id = ${p.id})}">
+                Disapprove
+            </a>
+        </div>
+    </div>
+
+</div>
+
+</body>
+
+</html>

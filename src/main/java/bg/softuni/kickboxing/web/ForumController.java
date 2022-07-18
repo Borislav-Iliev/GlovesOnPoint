@@ -29,7 +29,7 @@ public class ForumController {
 
     @GetMapping("")
     public String forum(Model model) {
-        model.addAttribute("posts", this.postService.getAllPostsOrderedByDateDesc());
+        model.addAttribute("posts", this.postService.getAllApprovedPostsOrderedByDateDesc());
         return "forum";
     }
 

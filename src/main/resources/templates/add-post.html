@@ -56,7 +56,7 @@
                     th:field="*{category}"
                     th:errorclass="is-invalid"
                     class="form-control">
-                <option value="">- Select Workout level -</option>
+                <option value="">- Select Post Category -</option>
                 <option th:each="c : ${T (bg.softuni.kickboxing.model.enums.PostCategoryEnum).values()}"
                         th:text="${c}"
                         th:value="${c}"

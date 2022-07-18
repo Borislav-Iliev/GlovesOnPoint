@@ -14,6 +14,14 @@ public interface PostRepository extends JpaRepository<PostEntity, Long> {
     @Query("SELECT new bg.softuni.kickboxing.model.dto.post.PostInformationDTO" +
             " (p.author.id, p.author.username, p.id, p.title, p.category, p.views, p.createdOn)" +
             " FROM PostEntity p" +
+            " WHERE p.isApproved = TRUE" +
             " ORDER BY p.createdOn DESC")
-    List<PostInformationDTO> getAllPostOrderedByCreatedOnDesc();
+    List<PostInformationDTO> getAllApprovedPostsOrderedByCreatedOnDesc();
+
+    @Query("SELECT new bg.softuni.kickboxing.model.dto.post.PostInformationDTO" +
+            " (p.author.id, p.author.username, p.id, p.title, p.category, p.views, p.createdOn)" +
+            " FROM PostEntity p" +
+            " WHERE p.isApproved = FALSE" +
+            " ORDER BY p.createdOn DESC")
+    List<PostInformationDTO> getAllNotApprovedPostsOrderedByCreatedOnDesc();
 }

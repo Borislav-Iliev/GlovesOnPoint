@@ -19,11 +19,13 @@ public class PostService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
     private final ModelMapper mapper;
+    private final UserRoleService userRoleService;
 
-    public PostService(PostRepository postRepository, UserRepository userRepository, ModelMapper mapper) {
+    public PostService(PostRepository postRepository, UserRepository userRepository, ModelMapper mapper, UserRoleService userRoleService) {
         this.postRepository = postRepository;
         this.userRepository = userRepository;
         this.mapper = mapper;
+        this.userRoleService = userRoleService;
     }
 
     public void addPost(AddPostDTO addPostDTO, KickboxingUserDetails userDetails) {
@@ -36,11 +38,19 @@ public class PostService {
                 .orElseThrow();
         post.setAuthor(author);
 
+        if (userDetails.getRole().equals("ADMIN") || userDetails.getRole().equals("MODERATOR")) {
+            post.setApproved(true);
+        }
+
         this.postRepository.save(post);
     }
 
-    public List<PostInformationDTO> getAllPostsOrderedByDateDesc() {
-        return this.postRepository.getAllPostOrderedByCreatedOnDesc();
+    public List<PostInformationDTO> getAllApprovedPostsOrderedByDateDesc() {
+        return this.postRepository.getAllApprovedPostsOrderedByCreatedOnDesc();
+    }
+
+    public List<PostInformationDTO> getAllNotApprovedPostsOrderedByDateDesc() {
+        return this.postRepository.getAllNotApprovedPostsOrderedByCreatedOnDesc();
     }
 
     public PostInformationDTO getPostById(Long id) {
@@ -56,5 +66,15 @@ public class PostService {
                 .orElseThrow();
         post.setViews(post.getViews() + 1);
         this.postRepository.save(post);
+    }
+
+    public void approvePost(Long id) {
+        PostEntity post = this.postRepository.findById(id).orElseThrow();
+        post.setApproved(true);
+        this.postRepository.save(post);
+    }
+
+    public void disapprovePost(Long id) {
+        this.postRepository.deleteById(id);
     }
 }
