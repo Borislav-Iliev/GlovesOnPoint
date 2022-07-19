@@ -6,7 +6,7 @@
     font-family: "PT Sans", sans-serif;
 }
 
-.banner, .register, .login, .profile, .news, .details, .workouts, .add-workout, .forum, .add-post, .add-news, .admin {
+.banner, .register, .login, .profile, .news, .details, .workouts, .workout-add, .forum, .post-add, .news-add, .admin {
     width: 100%;
     height: 100vh;
     background: linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)), url('/images/home-page-background.jpg') no-repeat;

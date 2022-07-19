@@ -36,12 +36,12 @@ public class NewsController {
     @GetMapping("/details/{id}")
     public String details(@PathVariable("id") Long id, Model model) {
         model.addAttribute("post", this.newsService.getNewsById(id));
-        return "details";
+        return "news-details";
     }
 
     @GetMapping("/add")
     public String addNews() {
-        return "add-news";
+        return "news-add";
     }
 
     @PostMapping("/add")

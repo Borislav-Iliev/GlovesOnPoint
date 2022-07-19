@@ -8,8 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
 @Repository
 public interface PostRepository extends JpaRepository<PostEntity, Long> {
 
@@ -25,5 +23,5 @@ public interface PostRepository extends JpaRepository<PostEntity, Long> {
             " FROM PostEntity p" +
             " WHERE p.isApproved = FALSE" +
             " ORDER BY p.createdOn DESC")
-    List<PostDTO> getAllNotApprovedPostsOrderedByCreatedOnDesc();
+    Page<PostDTO> getAllNotApprovedPostsOrderedByCreatedOnDesc(Pageable pageable);
 }

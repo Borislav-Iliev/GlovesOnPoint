@@ -13,7 +13,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 public class PostService {
@@ -51,8 +50,8 @@ public class PostService {
         return this.postRepository.getAllApprovedPostsOrderedByCreatedOnDesc(pageable);
     }
 
-    public List<PostDTO> getAllNotApprovedPostsOrderedByDateDesc() {
-        return this.postRepository.getAllNotApprovedPostsOrderedByCreatedOnDesc();
+    public Page<PostDTO> getAllNotApprovedPostsOrderedByDateDesc(Pageable pageable) {
+        return this.postRepository.getAllNotApprovedPostsOrderedByCreatedOnDesc(pageable);
     }
 
     public PostDTO getPostById(Long id) {

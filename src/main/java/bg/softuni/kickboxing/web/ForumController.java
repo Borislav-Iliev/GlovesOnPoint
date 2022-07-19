@@ -40,7 +40,7 @@ public class ForumController {
 
     @GetMapping("/posts/add")
     public String addPost() {
-        return "add-post";
+        return "post-add";
     }
 
     @PostMapping("/posts/add")
@@ -58,7 +58,11 @@ public class ForumController {
 
         this.postService.addPost(addPostModel, userDetails);
 
-        return "redirect:/forum";
+        if (userDetails.getRole().equals("USER")) {
+            redirectAttributes.addFlashAttribute("success", "Your post will be reviewed by a moderator.");
+        }
+
+        return "redirect:/forum/posts/add";
     }
 
     @GetMapping("/posts/{id}")

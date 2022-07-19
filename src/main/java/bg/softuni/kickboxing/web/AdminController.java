@@ -1,6 +1,8 @@
 package bg.softuni.kickboxing.web;
 
 import bg.softuni.kickboxing.service.PostService;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,9 +25,12 @@ public class AdminController {
     }
 
     @GetMapping("/posts")
-    public String approvePosts(Model model) {
-        model.addAttribute("posts", this.postService.getAllNotApprovedPostsOrderedByDateDesc());
-        return "admin";
+    public String posts(Model model,
+                        @PageableDefault(
+                                page = 0,
+                                size = 9) Pageable pageable) {
+        model.addAttribute("posts", this.postService.getAllNotApprovedPostsOrderedByDateDesc(pageable));
+        return "admin-posts";
     }
 
     @GetMapping("/posts/approve/{id}")

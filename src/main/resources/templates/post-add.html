@@ -6,12 +6,15 @@
     <th:block th:include="~{fragments/meta-info}">Meta</th:block>
 </head>
 
-<body class="add-post">
+<body class="post-add">
 
 <th:block th:include="~{fragments/navbar}">Meta</th:block>
 
 <div class="container">
     <h2 class="text-center text-white">Add Post</h2>
+
+    <div class="alert alert-success text-center" role="alert" th:text="${success}" th:if="${success}"></div>
+
     <form
             th:action="@{/forum/posts/add}"
             th:method="post"

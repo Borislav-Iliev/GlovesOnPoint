@@ -54,7 +54,7 @@ public class WorkoutController {
 
     @GetMapping("/add")
     public String addWorkout() {
-        return "add-workout";
+        return "workout-add";
     }
 
     @PostMapping("/add")
