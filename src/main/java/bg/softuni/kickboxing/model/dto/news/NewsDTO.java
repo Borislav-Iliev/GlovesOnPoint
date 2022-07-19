@@ -2,17 +2,17 @@ package bg.softuni.kickboxing.model.dto.news;
 
 import java.time.LocalDate;
 
-public class NewsInformationDTO {
+public class NewsDTO {
     private Long id;
     private String title;
     private String content;
     private String imageUrl;
     private LocalDate date;
 
-    public NewsInformationDTO() {
+    public NewsDTO() {
     }
 
-    public NewsInformationDTO(Long id, String title, String content, String imageUrl, LocalDate date) {
+    public NewsDTO(Long id, String title, String content, String imageUrl, LocalDate date) {
         this.id = id;
         this.title = title;
         this.content = content;

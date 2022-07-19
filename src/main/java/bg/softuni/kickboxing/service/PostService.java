@@ -1,13 +1,15 @@
 package bg.softuni.kickboxing.service;
 
 import bg.softuni.kickboxing.model.dto.post.AddPostDTO;
-import bg.softuni.kickboxing.model.dto.post.PostInformationDTO;
+import bg.softuni.kickboxing.model.dto.post.PostDTO;
 import bg.softuni.kickboxing.model.entity.PostEntity;
 import bg.softuni.kickboxing.model.entity.UserEntity;
 import bg.softuni.kickboxing.model.user.KickboxingUserDetails;
 import bg.softuni.kickboxing.repository.PostRepository;
 import bg.softuni.kickboxing.repository.UserRepository;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -45,18 +47,18 @@ public class PostService {
         this.postRepository.save(post);
     }
 
-    public List<PostInformationDTO> getAllApprovedPostsOrderedByDateDesc() {
-        return this.postRepository.getAllApprovedPostsOrderedByCreatedOnDesc();
+    public Page<PostDTO> getAllApprovedPostsOrderedByDateDesc(Pageable pageable) {
+        return this.postRepository.getAllApprovedPostsOrderedByCreatedOnDesc(pageable);
     }
 
-    public List<PostInformationDTO> getAllNotApprovedPostsOrderedByDateDesc() {
+    public List<PostDTO> getAllNotApprovedPostsOrderedByDateDesc() {
         return this.postRepository.getAllNotApprovedPostsOrderedByCreatedOnDesc();
     }
 
-    public PostInformationDTO getPostById(Long id) {
+    public PostDTO getPostById(Long id) {
         return this.postRepository
                 .findById(id)
-                .map(p -> this.mapper.map(p, PostInformationDTO.class))
+                .map(p -> this.mapper.map(p, PostDTO.class))
                 .orElse(null);
     }
 

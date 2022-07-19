@@ -3,6 +3,8 @@ package bg.softuni.kickboxing.web;
 import bg.softuni.kickboxing.model.dto.post.AddPostDTO;
 import bg.softuni.kickboxing.model.user.KickboxingUserDetails;
 import bg.softuni.kickboxing.service.PostService;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,8 +30,11 @@ public class ForumController {
     }
 
     @GetMapping("")
-    public String forum(Model model) {
-        model.addAttribute("posts", this.postService.getAllApprovedPostsOrderedByDateDesc());
+    public String forum(Model model,
+                        @PageableDefault(
+                                page = 0,
+                                size = 9) Pageable pageable) {
+        model.addAttribute("posts", this.postService.getAllApprovedPostsOrderedByDateDesc(pageable));
         return "forum";
     }
 

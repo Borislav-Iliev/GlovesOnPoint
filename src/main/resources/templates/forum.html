@@ -67,7 +67,7 @@
 </div>
 
 <div class="container">
-    <div class="row border-bottom" th:each="p : ${posts}">
+    <div class="row border-bottom" th:each="p : ${posts.getContent()}">
         <div class="col mt-1">
             <img th:src="@{${#authentication.principal.imageUrl}}" width="30" alt="profilePic">
             <p class="text-white"
@@ -93,10 +93,78 @@
         </div>
         <div class="col mt-1">
             <p class="text-white"
-               th:text="${p.createdOn}">
+               th:text="${p.formatCreatedOn()}">
             </p>
         </div>
     </div>
+</div>
+
+<div class="container">
+
+    <div class="row mt-1">
+
+        <div class="col">
+            <nav>
+                <ul class="pagination">
+                    <li class="page-item mr-auto" th:classappend="${posts.isFirst()} ? 'disabled' : ''">
+                        <a th:unless="${posts.isFirst()}"
+                           th:href="@{/forum(size=${posts.getSize()}, page = 0)}"
+                           class="btn btn-info">First
+                        </a>
+                        <a th:if="${posts.isFirst()}"
+                           class="btn btn-info" href="">First
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <div class="col">
+            <nav>
+                <ul class="pagination">
+                    <li class="page-item ml-auto" th:classappend="${posts.hasPrevious() ? '' : 'disabled'}">
+                        <a th:if="${posts.hasPrevious()}"
+                           th:href="@{/forum(size=${posts.getSize()}, page = ${posts.getNumber() - 1})}"
+                           class="btn btn-info">Previous
+                        </a>
+                        <a th:unless="${posts.hasPrevious()}"
+                           class="btn btn-info" href="">Previous
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <div class="col">
+            <nav>
+                <ul class="pagination">
+                    <li class="page-item mr-auto" th:classappend="${posts.hasNext() ? '' : 'disabled'}">
+                        <a th:if="${posts.hasNext()}"
+                           th:href="@{/forum(size=${posts.getSize()}, page = ${posts.getNumber() + 1})}"
+                           class="btn btn-info">Next
+                        </a>
+                        <a th:unless="${posts.hasNext()}"
+                           class="btn btn-info" href="">Next
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <div class="col">
+            <nav>
+                <ul class="pagination">
+                    <li class="page-item ml-auto" th:classappend="${posts.isLast()} ? 'disabled' : ''">
+                        <a th:unless="${posts.isLast()}"
+                           th:href="@{/forum(size=${posts.getSize()}, page = ${posts.getTotalPages() - 1})}"
+                           class="btn btn-info">Last
+                        </a>
+                        <a th:if="${posts.isLast()}"
+                           class="btn btn-info" href="">Last
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+
 </div>
 
 </body>

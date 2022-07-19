@@ -1,7 +1,7 @@
 package bg.softuni.kickboxing.service;
 
 import bg.softuni.kickboxing.model.dto.workout.AddWorkoutDTO;
-import bg.softuni.kickboxing.model.dto.workout.WorkoutInformationDTO;
+import bg.softuni.kickboxing.model.dto.workout.WorkoutDTO;
 import bg.softuni.kickboxing.model.entity.UserEntity;
 import bg.softuni.kickboxing.model.entity.WorkoutEntity;
 import bg.softuni.kickboxing.model.enums.WorkoutLevelEnum;
@@ -26,15 +26,15 @@ public class WorkoutService {
         this.mapper = mapper;
     }
 
-    public List<WorkoutInformationDTO> getAllWorkouts() {
+    public List<WorkoutDTO> getAllWorkouts() {
         return this.workoutRepository
                 .findAll()
                 .stream()
-                .map(w -> this.mapper.map(w, WorkoutInformationDTO.class))
+                .map(w -> this.mapper.map(w, WorkoutDTO.class))
                 .toList();
     }
 
-    public List<WorkoutInformationDTO> getAllWorkoutsByLevel(WorkoutLevelEnum level) {
+    public List<WorkoutDTO> getAllWorkoutsByLevel(WorkoutLevelEnum level) {
         return this.workoutRepository.findAllByLevel(level);
     }
 

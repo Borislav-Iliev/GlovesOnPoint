@@ -1,7 +1,7 @@
 package bg.softuni.kickboxing.service;
 
 import bg.softuni.kickboxing.model.dto.news.AddNewsDTO;
-import bg.softuni.kickboxing.model.dto.news.NewsInformationDTO;
+import bg.softuni.kickboxing.model.dto.news.NewsDTO;
 import bg.softuni.kickboxing.model.entity.NewsEntity;
 import bg.softuni.kickboxing.model.entity.UserEntity;
 import bg.softuni.kickboxing.repository.NewsRepository;
@@ -26,7 +26,7 @@ public class NewsService {
         this.mapper = mapper;
     }
 
-    public List<NewsInformationDTO> getAllNewsOrderedByDateDesc() {
+    public List<NewsDTO> getAllNewsOrderedByDateDesc() {
         return this.newsRepository.findAllByOrderByDateDescIdDesc();
     }
 

@@ -2,16 +2,16 @@ package bg.softuni.kickboxing.model.dto.workout;
 
 import bg.softuni.kickboxing.model.enums.WorkoutLevelEnum;
 
-public class WorkoutInformationDTO {
+public class WorkoutDTO {
     private Long id;
     private WorkoutLevelEnum level;
     private String content;
     private String imageUrl;
 
-    public WorkoutInformationDTO() {
+    public WorkoutDTO() {
     }
 
-    public WorkoutInformationDTO(Long id, WorkoutLevelEnum level, String content, String imageUrl) {
+    public WorkoutDTO(Long id, WorkoutLevelEnum level, String content, String imageUrl) {
         this.id = id;
         this.level = level;
         this.content = content;
