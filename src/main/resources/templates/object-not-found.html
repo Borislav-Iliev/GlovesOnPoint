@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <th:block th:include="~{fragments/meta-info}">Meta</th:block>
+</head>
+
+<body class="error">
+
+<th:block th:include="~{fragments/navbar}">Navbar</th:block>
+
+<div class="content">
+
+    <h1 class="text-white text-center">
+        An object with id
+        <th:block th:text="${objectId}">1234</th:block>
+        was not found!
+    </h1>
+
+</div>
+
+</body>
+
+</html>

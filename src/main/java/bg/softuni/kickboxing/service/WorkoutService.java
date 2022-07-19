@@ -5,6 +5,7 @@ import bg.softuni.kickboxing.model.dto.workout.WorkoutDTO;
 import bg.softuni.kickboxing.model.entity.UserEntity;
 import bg.softuni.kickboxing.model.entity.WorkoutEntity;
 import bg.softuni.kickboxing.model.enums.WorkoutLevelEnum;
+import bg.softuni.kickboxing.model.exception.ObjectNotFoundException;
 import bg.softuni.kickboxing.repository.UserRepository;
 import bg.softuni.kickboxing.repository.WorkoutRepository;
 import org.modelmapper.ModelMapper;
@@ -48,6 +49,9 @@ public class WorkoutService {
     }
 
     public void deleteWorkout(Long id) {
+        if (id > this.workoutRepository.count()) {
+            throw new ObjectNotFoundException(id);
+        }
         this.workoutRepository.deleteById(id);
     }
 }

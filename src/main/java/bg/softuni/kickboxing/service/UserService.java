@@ -43,9 +43,9 @@ public class UserService {
         newUser.setUserRoles(List.of(userRole));
 
         this.userRepository.save(newUser);
-        login(newUser);
         this.emailService.sendRegistrationEmail(newUser.getEmail(),
                 newUser.getFirstName() + " " + newUser.getLastName());
+        login(newUser);
     }
 
     public void login(UserEntity userEntity) {

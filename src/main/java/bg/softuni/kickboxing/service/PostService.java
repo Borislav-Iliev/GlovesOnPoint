@@ -4,6 +4,7 @@ import bg.softuni.kickboxing.model.dto.post.AddPostDTO;
 import bg.softuni.kickboxing.model.dto.post.PostDTO;
 import bg.softuni.kickboxing.model.entity.PostEntity;
 import bg.softuni.kickboxing.model.entity.UserEntity;
+import bg.softuni.kickboxing.model.exception.ObjectNotFoundException;
 import bg.softuni.kickboxing.model.user.KickboxingUserDetails;
 import bg.softuni.kickboxing.repository.PostRepository;
 import bg.softuni.kickboxing.repository.UserRepository;
@@ -58,24 +59,29 @@ public class PostService {
         return this.postRepository
                 .findById(id)
                 .map(p -> this.mapper.map(p, PostDTO.class))
-                .orElse(null);
+                .orElseThrow(() -> new ObjectNotFoundException(id));
     }
 
     public void increaseViewsCountById(Long id) {
         PostEntity post = this.postRepository
                 .findById(id)
-                .orElseThrow();
+                .orElseThrow(() -> new ObjectNotFoundException(id));
         post.setViews(post.getViews() + 1);
         this.postRepository.save(post);
     }
 
     public void approvePost(Long id) {
-        PostEntity post = this.postRepository.findById(id).orElseThrow();
+        PostEntity post = this.postRepository
+                .findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException(id));
         post.setApproved(true);
         this.postRepository.save(post);
     }
 
     public void disapprovePost(Long id) {
+        if (id > this.postRepository.count()) {
+            throw new ObjectNotFoundException(id);
+        }
         this.postRepository.deleteById(id);
     }
 }

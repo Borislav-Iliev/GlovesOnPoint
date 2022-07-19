@@ -30,7 +30,7 @@ public class EmailService {
             mimeMessageHelper.setSubject("Welcome!");
             mimeMessageHelper.setText(generateMessageContent(userName), true);
 
-            javaMailSender.send(mimeMessageHelper.getMimeMessage());
+            this.javaMailSender.send(mimeMessageHelper.getMimeMessage());
         } catch (MessagingException e) {
             throw new RuntimeException(e);
         }

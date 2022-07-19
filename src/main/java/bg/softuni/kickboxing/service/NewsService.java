@@ -4,6 +4,7 @@ import bg.softuni.kickboxing.model.dto.news.AddNewsDTO;
 import bg.softuni.kickboxing.model.dto.news.NewsDTO;
 import bg.softuni.kickboxing.model.entity.NewsEntity;
 import bg.softuni.kickboxing.model.entity.UserEntity;
+import bg.softuni.kickboxing.model.exception.ObjectNotFoundException;
 import bg.softuni.kickboxing.repository.NewsRepository;
 import bg.softuni.kickboxing.repository.UserRepository;
 import org.modelmapper.ModelMapper;
@@ -26,16 +27,6 @@ public class NewsService {
         this.mapper = mapper;
     }
 
-    public List<NewsDTO> getAllNewsOrderedByDateDesc() {
-        return this.newsRepository.findAllByOrderByDateDescIdDesc();
-    }
-
-    public NewsEntity getNewsById(Long id) {
-        return this.newsRepository
-                .findById(id)
-                .orElse(null);
-    }
-
     public void addNews(AddNewsDTO addNewsDto, UserDetails userDetails) {
         NewsEntity news = this.mapper.map(addNewsDto, NewsEntity.class);
 
@@ -49,7 +40,20 @@ public class NewsService {
         this.newsRepository.save(news);
     }
 
+    public List<NewsDTO> getAllNewsOrderedByDateDesc() {
+        return this.newsRepository.findAllByOrderByDateDescIdDesc();
+    }
+
+    public NewsEntity getNewsById(Long id) {
+        return this.newsRepository
+                .findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException(id));
+    }
+
     public void deleteNews(Long id) {
+        if (id > this.newsRepository.count()) {
+            throw new ObjectNotFoundException(id);
+        }
         this.newsRepository.deleteById(id);
     }
 }
