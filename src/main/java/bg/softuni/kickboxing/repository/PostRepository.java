@@ -24,4 +24,6 @@ public interface PostRepository extends JpaRepository<PostEntity, Long> {
             " WHERE p.isApproved = FALSE" +
             " ORDER BY p.createdOn DESC")
     Page<PostDTO> getAllNotApprovedPostsOrderedByCreatedOnDesc(Pageable pageable);
+
+    PostEntity findTopByOrderByIdDesc();
 }

@@ -49,9 +49,13 @@ public class WorkoutService {
     }
 
     public void deleteWorkout(Long id) {
-        if (id > this.workoutRepository.count()) {
+        if (id > this.getIdOfLastObjectInTable()) {
             throw new ObjectNotFoundException(id);
         }
         this.workoutRepository.deleteById(id);
+    }
+
+    public Long getIdOfLastObjectInTable() {
+        return this.workoutRepository.findTopByOrderByIdDesc().getId();
     }
 }

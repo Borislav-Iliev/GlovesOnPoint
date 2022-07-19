@@ -16,4 +16,6 @@ public interface NewsRepository extends JpaRepository<NewsEntity, Long> {
             " FROM NewsEntity n" +
             " ORDER BY n.date DESC, n.id DESC")
     List<NewsDTO> findAllByOrderByDateDescIdDesc();
+
+    NewsEntity findTopByOrderByIdDesc();
 }

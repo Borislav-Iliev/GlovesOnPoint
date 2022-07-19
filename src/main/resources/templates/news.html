@@ -30,7 +30,7 @@
             <div class="row news-row"
                  th:each="news : ${news}">
                 <div class="col-md-4 col-lg-4 col-sm-12">
-                    <img class="w-100 h-100" th:src="@{${news.imageUrl}}" alt="News Picture">
+                    <img height="175px" class="card-image-top d-block w-100" th:src="@{${news.imageUrl}}" alt="News Picture">
                 </div>
 
                 <div class="col-md-8 col-lg-8 col-sm-12">

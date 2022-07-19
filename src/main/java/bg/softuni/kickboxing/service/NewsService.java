@@ -8,6 +8,7 @@ import bg.softuni.kickboxing.model.exception.ObjectNotFoundException;
 import bg.softuni.kickboxing.repository.NewsRepository;
 import bg.softuni.kickboxing.repository.UserRepository;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -51,9 +52,13 @@ public class NewsService {
     }
 
     public void deleteNews(Long id) {
-        if (id > this.newsRepository.count()) {
+        if (id > this.getIdOfLastObjectInTable()) {
             throw new ObjectNotFoundException(id);
         }
         this.newsRepository.deleteById(id);
+    }
+
+    public Long getIdOfLastObjectInTable() {
+        return this.newsRepository.findTopByOrderByIdDesc().getId();
     }
 }

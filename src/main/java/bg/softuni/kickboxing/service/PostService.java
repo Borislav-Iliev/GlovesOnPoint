@@ -21,13 +21,11 @@ public class PostService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
     private final ModelMapper mapper;
-    private final UserRoleService userRoleService;
 
     public PostService(PostRepository postRepository, UserRepository userRepository, ModelMapper mapper, UserRoleService userRoleService) {
         this.postRepository = postRepository;
         this.userRepository = userRepository;
         this.mapper = mapper;
-        this.userRoleService = userRoleService;
     }
 
     public void addPost(AddPostDTO addPostDTO, KickboxingUserDetails userDetails) {
@@ -79,9 +77,13 @@ public class PostService {
     }
 
     public void disapprovePost(Long id) {
-        if (id > this.postRepository.count()) {
+        if (id > this.getIdOfLastObjectInTable()) {
             throw new ObjectNotFoundException(id);
         }
         this.postRepository.deleteById(id);
+    }
+
+    public Long getIdOfLastObjectInTable() {
+        return this.postRepository.findTopByOrderByIdDesc().getId();
     }
 }

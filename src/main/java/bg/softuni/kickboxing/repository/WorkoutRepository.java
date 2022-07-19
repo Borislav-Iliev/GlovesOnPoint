@@ -22,4 +22,6 @@ public interface WorkoutRepository extends JpaRepository<WorkoutEntity, Long> {
             " FROM WorkoutEntity w" +
             " WHERE w.level = :level")
     Page<WorkoutDTO> findAllByLevel(WorkoutLevelEnum level, Pageable pageable);
+
+    WorkoutEntity findTopByOrderByIdDesc();
 }
