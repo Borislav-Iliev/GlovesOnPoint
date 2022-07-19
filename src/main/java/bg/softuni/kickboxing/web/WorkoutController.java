@@ -3,6 +3,8 @@ package bg.softuni.kickboxing.web;
 import bg.softuni.kickboxing.model.dto.workout.AddWorkoutDTO;
 import bg.softuni.kickboxing.model.enums.WorkoutLevelEnum;
 import bg.softuni.kickboxing.service.WorkoutService;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -29,27 +31,39 @@ public class WorkoutController {
     }
 
     @GetMapping("")
-    public String workouts(Model model) {
-        model.addAttribute("workouts", this.workoutService.getAllWorkouts());
+    public String workouts(Model model,
+                           @PageableDefault(
+                                   page = 0,
+                                   size = 8) Pageable pageable) {
+        model.addAttribute("workouts", this.workoutService.getAllWorkouts(pageable));
         return "workouts";
     }
 
     @GetMapping("/easy")
-    public String easyWorkouts(Model model) {
-        model.addAttribute("workouts", this.workoutService.getAllWorkoutsByLevel(WorkoutLevelEnum.EASY));
-        return "workouts";
+    public String easyWorkouts(Model model,
+                               @PageableDefault(
+                                       page = 0,
+                                       size = 8) Pageable pageable) {
+        model.addAttribute("workouts", this.workoutService.getAllWorkoutsByLevel(WorkoutLevelEnum.EASY, pageable));
+        return "workouts-easy";
     }
 
     @GetMapping("/intermediate")
-    public String intermediateWorkouts(Model model) {
-        model.addAttribute("workouts", this.workoutService.getAllWorkoutsByLevel(WorkoutLevelEnum.INTERMEDIATE));
-        return "workouts";
+    public String intermediateWorkouts(Model model,
+                                       @PageableDefault(
+                                               page = 0,
+                                               size = 8) Pageable pageable) {
+        model.addAttribute("workouts", this.workoutService.getAllWorkoutsByLevel(WorkoutLevelEnum.INTERMEDIATE, pageable));
+        return "workouts-intermediate";
     }
 
     @GetMapping("/hard")
-    public String hardWorkouts(Model model) {
-        model.addAttribute("workouts", this.workoutService.getAllWorkoutsByLevel(WorkoutLevelEnum.HARD));
-        return "workouts";
+    public String hardWorkouts(Model model,
+                               @PageableDefault(
+                                       page = 0,
+                                       size = 8) Pageable pageable) {
+        model.addAttribute("workouts", this.workoutService.getAllWorkoutsByLevel(WorkoutLevelEnum.HARD, pageable));
+        return "workouts-hard";
     }
 
     @GetMapping("/add")

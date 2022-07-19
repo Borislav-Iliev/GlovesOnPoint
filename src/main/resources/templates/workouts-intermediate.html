@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org">
-
 <head>
     <th:block th:include="~{fragments/meta-info}">Meta</th:block>
 </head>
@@ -21,7 +20,7 @@
                 <ul class="pagination">
                     <li class="page-item mr-auto" th:classappend="${workouts.isFirst()} ? 'disabled' : ''">
                         <a th:unless="${workouts.isFirst()}"
-                           th:href="@{/workouts(size=${workouts.getSize()}, page = 0)}"
+                           th:href="@{/workouts/intermediate/(size=${workouts.getSize()}, page = 0)}"
                            class="btn btn-info">First
                         </a>
                         <a th:if="${workouts.isFirst()}"
@@ -36,7 +35,7 @@
                 <ul class="pagination">
                     <li class="page-item ml-auto" th:classappend="${workouts.hasPrevious() ? '' : 'disabled'}">
                         <a th:if="${workouts.hasPrevious()}"
-                           th:href="@{/workouts(size=${workouts.getSize()}, page = ${workouts.getNumber() - 1})}"
+                           th:href="@{/workouts/intermediate/(size=${workouts.getSize()}, page = ${workouts.getNumber() - 1})}"
                            class="btn btn-info">Previous
                         </a>
                         <a th:unless="${workouts.hasPrevious()}"
@@ -51,7 +50,7 @@
                 <ul class="pagination">
                     <li class="page-item mr-auto" th:classappend="${workouts.hasNext() ? '' : 'disabled'}">
                         <a th:if="${workouts.hasNext()}"
-                           th:href="@{/workouts(size=${workouts.getSize()}, page = ${workouts.getNumber() + 1})}"
+                           th:href="@{/workouts/intermediate/(size=${workouts.getSize()}, page = ${workouts.getNumber() + 1})}"
                            class="btn btn-info">Next
                         </a>
                         <a th:unless="${workouts.hasNext()}"
@@ -66,7 +65,7 @@
                 <ul class="pagination">
                     <li class="page-item ml-auto" th:classappend="${workouts.isLast()} ? 'disabled' : ''">
                         <a th:unless="${workouts.isLast()}"
-                           th:href="@{/workouts(size=${workouts.getSize()}, page = ${workouts.getTotalPages() - 1})}"
+                           th:href="@{/workouts/intermediate/(size=${workouts.getSize()}, page = ${workouts.getTotalPages() - 1})}"
                            class="btn btn-info">Last
                         </a>
                         <a th:if="${workouts.isLast()}"

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<div class="container">
+    <div class="row justify-content-center">
+        <a th:href="@{/workouts}">
+            <button type="button" class="home-button"><span class="home-button-span"></span> All</button>
+        </a>
+        <a th:href="@{/workouts/easy}">
+            <button type="button" class="home-button"><span class="home-button-span"></span> Easy</button>
+        </a>
+        <a th:href="@{/workouts/intermediate}">
+            <button type="button" class="home-button"><span class="home-button-span"></span> Intermediate</button>
+        </a>
+        <a th:href="@{/workouts/hard}">
+            <button type="button" class="home-button"><span class="home-button-span"></span> Hard</button>
+        </a>
+        <a sec:authorize="hasRole('MODERATOR')" th:href="@{/workouts/add}">
+            <button type="button" class="home-button"><span class="home-button-span"></span> Add Course</button>
+        </a>
+    </div>
+
+</html>

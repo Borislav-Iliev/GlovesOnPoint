@@ -8,6 +8,8 @@ import bg.softuni.kickboxing.model.enums.WorkoutLevelEnum;
 import bg.softuni.kickboxing.repository.UserRepository;
 import bg.softuni.kickboxing.repository.WorkoutRepository;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -26,16 +28,12 @@ public class WorkoutService {
         this.mapper = mapper;
     }
 
-    public List<WorkoutDTO> getAllWorkouts() {
-        return this.workoutRepository
-                .findAll()
-                .stream()
-                .map(w -> this.mapper.map(w, WorkoutDTO.class))
-                .toList();
+    public Page<WorkoutDTO> getAllWorkouts(Pageable pageable) {
+        return this.workoutRepository.findAllWorkouts(pageable);
     }
 
-    public List<WorkoutDTO> getAllWorkoutsByLevel(WorkoutLevelEnum level) {
-        return this.workoutRepository.findAllByLevel(level);
+    public Page<WorkoutDTO> getAllWorkoutsByLevel(WorkoutLevelEnum level, Pageable pageable) {
+        return this.workoutRepository.findAllByLevel(level, pageable);
     }
 
     public void addWorkout(AddWorkoutDTO addWorkoutDTO, UserDetails userDetails) {
