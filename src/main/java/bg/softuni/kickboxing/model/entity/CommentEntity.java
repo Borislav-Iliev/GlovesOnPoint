@@ -1,6 +1,7 @@
 package bg.softuni.kickboxing.model.entity;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "comments")
@@ -8,6 +9,11 @@ public class CommentEntity extends BaseEntity {
 
     @Column(nullable = false)
     private String content;
+
+    @Column(name = "is_approved", nullable = false, columnDefinition = "TINYINT(1) DEFAULT 0")
+    private boolean isApproved;
+
+    private LocalDateTime createdOn;
 
     @ManyToOne
     private PostEntity post;
@@ -26,6 +32,22 @@ public class CommentEntity extends BaseEntity {
         this.content = content;
     }
 
+    public boolean isApproved() {
+        return isApproved;
+    }
+
+    public void setApproved(boolean approved) {
+        isApproved = approved;
+    }
+
+    public LocalDateTime getCreatedOn() {
+        return createdOn;
+    }
+
+    public void setCreatedOn(LocalDateTime createdOn) {
+        this.createdOn = createdOn;
+    }
+
     public PostEntity getPost() {
         return post;
     }
@@ -38,7 +60,7 @@ public class CommentEntity extends BaseEntity {
         return author;
     }
 
-    public void setAuthor(UserEntity user) {
-        this.author = user;
+    public void setAuthor(UserEntity author) {
+        this.author = author;
     }
 }

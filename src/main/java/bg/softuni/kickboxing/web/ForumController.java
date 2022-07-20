@@ -2,6 +2,7 @@ package bg.softuni.kickboxing.web;
 
 import bg.softuni.kickboxing.model.dto.post.AddPostDTO;
 import bg.softuni.kickboxing.model.user.KickboxingUserDetails;
+import bg.softuni.kickboxing.service.CommentService;
 import bg.softuni.kickboxing.service.PostService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -19,9 +20,11 @@ import javax.validation.Valid;
 public class ForumController {
 
     private final PostService postService;
+    private final CommentService commentService;
 
-    public ForumController(PostService postService) {
+    public ForumController(PostService postService, CommentService commentService) {
         this.postService = postService;
+        this.commentService = commentService;
     }
 
     @ModelAttribute("addPostModel")
@@ -31,9 +34,7 @@ public class ForumController {
 
     @GetMapping("")
     public String forum(Model model,
-                        @PageableDefault(
-                                page = 0,
-                                size = 9) Pageable pageable) {
+                        @PageableDefault(size = 9) Pageable pageable) {
         model.addAttribute("posts", this.postService.getAllApprovedPostsOrderedByDateDesc(pageable));
         return "forum";
     }
@@ -44,7 +45,7 @@ public class ForumController {
     }
 
     @PostMapping("/posts/add")
-    public String addNews(@Valid AddPostDTO addPostModel,
+    public String addPost(@Valid AddPostDTO addPostModel,
                           BindingResult bindingResult,
                           RedirectAttributes redirectAttributes,
                           @AuthenticationPrincipal KickboxingUserDetails userDetails) {
@@ -66,9 +67,9 @@ public class ForumController {
     }
 
     @GetMapping("/posts/{id}")
-    public String post(@PathVariable Long id, Model model) {
-        model.addAttribute(this.postService.getPostById(id));
-        this.postService.increaseViewsCountById(id);
+    public String post(@PathVariable("id") Long id, Model model) {
+        model.addAttribute("post", this.postService.getPostDetailsById(id));
+        this.postService.increaseViewsCount(id);
         return "post-details";
     }
 }

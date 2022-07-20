@@ -1,12 +1,59 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+>
 
-<h1>Hello</h1>
+<head>
+    <th:block th:include="~{fragments/meta-info}">Meta</th:block>
+</head>
+
+<body class="post-details">
+
+<th:block th:include="~{fragments/navbar}">Navbar</th:block>
+
+<div class="container">
+    <h2 class="text-white text-center border-bottom" th:text="${post.title}"></h2>
+
+    <div class="row">
+        <div class="col-2 border-bottom">
+            <img class="justify-content-center img-fluid rounded-circle" width="120px"
+                 th:src="@{${post.authorImageUrl}}" alt="Profile Picture">
+
+            <p class="text-white text-left font-weight-bold" th:text="${post.authorUsername}"></p>
+        </div>
+
+        <div class="col border-bottom">
+            <p class="text-white text-left" th:text="${post.content}">
+            </p>
+        </div>
+    </div>
+
+</div>
+
+
+<div class="container border-bottom">
+    <h3 class="text-white text-center">Comments</h3>
+    <div class="row mb-2"
+         th:each="c : ${post.comments}">
+
+        <h6 class="text-white text-left" th:text="${post.authorUsername}"></h6>
+
+        <p class="text-white text-center">
+        </p>
+
+        <h6 class="text-white text-left"></h6>
+
+    </div>
+</div>
+
+<div class="container">
+    <div class="row justify-content-center">
+        <a th:href="@{/forum/posts/{id}/add/comment(id = ${post.id})}">
+            <button type="button" class="home-button"><span class="home-button-span"></span> Add Comment</button>
+        </a>
+    </div>
+</div>
 
 </body>
+
 </html>

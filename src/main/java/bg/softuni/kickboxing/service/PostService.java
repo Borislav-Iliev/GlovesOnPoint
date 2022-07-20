@@ -1,7 +1,9 @@
 package bg.softuni.kickboxing.service;
 
+import bg.softuni.kickboxing.model.dto.comment.CommentDTO;
 import bg.softuni.kickboxing.model.dto.post.AddPostDTO;
 import bg.softuni.kickboxing.model.dto.post.PostDTO;
+import bg.softuni.kickboxing.model.dto.post.PostDetailsDTO;
 import bg.softuni.kickboxing.model.entity.PostEntity;
 import bg.softuni.kickboxing.model.entity.UserEntity;
 import bg.softuni.kickboxing.model.exception.ObjectNotFoundException;
@@ -14,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.stream.Collectors;
 
 @Service
 public class PostService {
@@ -53,17 +56,31 @@ public class PostService {
         return this.postRepository.getAllNotApprovedPostsOrderedByCreatedOnDesc(pageable);
     }
 
-    public PostDTO getPostById(Long id) {
-        return this.postRepository
-                .findById(id)
-                .map(p -> this.mapper.map(p, PostDTO.class))
-                .orElseThrow(() -> new ObjectNotFoundException(id));
+    public PostEntity findById(Long id) {
+        return this.postRepository.findById(id).orElseThrow();
     }
 
-    public void increaseViewsCountById(Long id) {
+    public PostDetailsDTO getPostDetailsById(Long id) {
         PostEntity post = this.postRepository
                 .findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException(id));
+
+        return this.mapToPostDetailsDTO(post);
+    }
+
+    // Model mapper could not map the entity to the dto,
+    // so I had to manually do it.
+    private PostDetailsDTO mapToPostDetailsDTO(PostEntity post) {
+        return new PostDetailsDTO(post.getId(), post.getTitle(), post.getContent(), post.getCategory(),
+                post.getViews(), post.getCreatedOn(),
+                post.getComments().stream().map(c -> this.mapper.map(c, CommentDTO.class)).collect(Collectors.toList()),
+                post.getAuthor().getUsername(), post.getAuthor().getImageUrl());
+    }
+
+    public void increaseViewsCount(Long id) {
+        PostEntity post = this.postRepository
+                .findById(id)
+                .orElseThrow();
         post.setViews(post.getViews() + 1);
         this.postRepository.save(post);
     }

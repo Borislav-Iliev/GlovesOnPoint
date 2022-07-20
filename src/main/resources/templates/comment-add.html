@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <th:block th:include="~{fragments/meta-info}">Meta</th:block>
+</head>
+
+<body class="comment-add">
+
+<th:block th:include="~{fragments/navbar}">Navbar</th:block>
+
+<div class="container">
+    <h3 class="text-white text-center mb-3">Leave a comment</h3>
+    <div class="row justify-content-center">
+
+        <form th:action="@{/forum/posts/{id}/add/comment(id = ${post.id})}"
+              th:method="POST"
+              th:object="${addCommentModel}"
+              class="main-form mx-auto col-md-8 d-flex flex-column justify-content-center">
+            <div class="form-group">
+                <label for="content" class="text-white font-weight-bold">Comment</label>
+                <textarea
+                        id="content"
+                        th:field="*{content}"
+                        th:errorclass="is-invalid"
+                        type="textarea"
+                        class="form-control"
+                        rows="5"
+                        placeholder="Comment">
+                </textarea>
+                <div class="invalid-feedback errors alert alert-danger">
+                    <p
+                            th:each="err : ${#fields.errors('content')}"
+                            th:text="${err}">
+                    </p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col col-md-4">
+                    <div class="button-holder d-flex">
+                        <input type="submit" class="btn btn-info btn-lg" value="Add Comment"/>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+</body>
+
+</html>

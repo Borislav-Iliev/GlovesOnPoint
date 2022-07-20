@@ -1,6 +1,8 @@
 package bg.softuni.kickboxing.model.entity;
 
 import bg.softuni.kickboxing.model.enums.PostCategoryEnum;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -34,6 +36,7 @@ public class PostEntity extends BaseEntity {
     private boolean isApproved;
 
     @OneToMany(mappedBy = "post")
+    @LazyCollection(LazyCollectionOption.FALSE)
     private List<CommentEntity> comments;
 
     @ManyToOne
