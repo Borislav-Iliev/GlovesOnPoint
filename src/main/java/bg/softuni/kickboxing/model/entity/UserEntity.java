@@ -5,6 +5,7 @@ import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Entity
@@ -109,7 +110,7 @@ public class UserEntity extends BaseEntity {
     }
 
     public List<UserRoleEntity> getUserRoles() {
-        return userRoles;
+        return Collections.unmodifiableList(userRoles);
     }
 
     public void setUserRoles(List<UserRoleEntity> userRoles) {
@@ -130,5 +131,13 @@ public class UserEntity extends BaseEntity {
 
     public void setComments(List<CommentEntity> comments) {
         this.comments = comments;
+    }
+
+    public void addRole(UserRoleEntity userRole) {
+        this.userRoles.add(userRole);
+    }
+
+    public void removeModeratorRole() {
+        this.userRoles.remove(1);
     }
 }

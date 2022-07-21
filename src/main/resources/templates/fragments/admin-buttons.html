@@ -1,16 +1,17 @@
 <!DOCTYPE html>
 <html lang="en"
-      xmlns:th="http://www.thymeleaf.org">
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <div class="container">
     <div class="row justify-content-center">
-        <a th:href="@{/admin/posts}">
+        <a th:href="@{/moderator/posts}">
             <button type="button" class="home-button"><span class="home-button-span"></span> Approve posts</button>
         </a>
-        <a th:href="@{/admin/comments}">
+        <a th:href="@{/moderator/comments}">
             <button type="button" class="home-button"><span class="home-button-span"></span> Approve comments</button>
         </a>
-        <a th:href="@{/admin/moderators}">
+        <a sec:authorize="hasRole('ADMIN')" th:href="@{/admin/moderators}">
             <button type="button" class="home-button"><span class="home-button-span"></span> Approve moderators</button>
         </a>
     </div>

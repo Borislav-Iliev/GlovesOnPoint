@@ -1,8 +1,11 @@
 package bg.softuni.kickboxing.service;
 
+import bg.softuni.kickboxing.model.dto.user.UserDTO;
 import bg.softuni.kickboxing.model.dto.user.UserRegistrationDTO;
 import bg.softuni.kickboxing.model.entity.UserEntity;
 import bg.softuni.kickboxing.model.entity.UserRoleEntity;
+import bg.softuni.kickboxing.model.exception.ObjectNotFoundException;
+import bg.softuni.kickboxing.model.exception.UsernameNotFoundException;
 import bg.softuni.kickboxing.repository.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -62,5 +65,26 @@ public class UserService {
         SecurityContextHolder.
                 getContext().
                 setAuthentication(auth);
+    }
+
+    public UserDTO getUserDTOByUsername(String username) {
+        UserEntity userEntity = this.userRepository.findByUsername(username).orElseThrow();
+        return this.mapper.map(userEntity, UserDTO.class);
+    }
+
+    public void makeModerator(String username) {
+        UserEntity user = this.userRepository
+                .findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException(username));
+        user.addRole(this.userRoleService.getModeratorRole());
+        this.userRepository.save(user);
+    }
+
+    public void removeModerator(String username) {
+        UserEntity user = this.userRepository
+                .findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException(username));
+        user.removeModeratorRole();
+        this.userRepository.save(user);
     }
 }

@@ -1,67 +1,75 @@
 package bg.softuni.kickboxing.web;
 
-import bg.softuni.kickboxing.service.CommentService;
-import bg.softuni.kickboxing.service.PostService;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
+import bg.softuni.kickboxing.model.dto.user.SearchUserDTO;
+import bg.softuni.kickboxing.model.exception.UsernameNotFoundException;
+import bg.softuni.kickboxing.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
 
-    private final PostService postService;
-    private final CommentService commentService;
+    private final UserService userService;
 
-    public AdminController(PostService postService, CommentService commentService) {
-        this.postService = postService;
-        this.commentService = commentService;
+    public AdminController(UserService userService) {
+        this.userService = userService;
     }
 
-    @GetMapping("")
-    public String admin() {
-        return "admin";
+    @ModelAttribute("searchUserModel")
+    private SearchUserDTO initSearchUserModel() {
+        return new SearchUserDTO();
     }
 
-    @GetMapping("/posts")
-    public String posts(Model model,
-                        @PageableDefault(size = 9) Pageable pageable) {
-        model.addAttribute("posts", this.postService.getAllNotApprovedPostsOrderedByDateDesc(pageable));
-        return "admin-posts";
+    @GetMapping("/moderators")
+    public String moderators() {
+        return "admin-moderators";
     }
 
-    @GetMapping("/posts/approve/{id}")
-    public String approvePost(@PathVariable("id") Long id) {
-        this.postService.approvePost(id);
-        return "redirect:/admin/posts";
+    @PostMapping("/moderators")
+    public String moderators(@Valid SearchUserDTO searchUserModel,
+                             BindingResult bindingResult,
+                             RedirectAttributes redirectAttributes) {
+
+        if (bindingResult.hasErrors()) {
+            redirectAttributes.addFlashAttribute("searchUserModel", searchUserModel);
+            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.searchUserModel", bindingResult);
+
+            return "redirect:/admin/moderators";
+        }
+
+        return String.format("redirect:/admin/moderators/%s", searchUserModel.getQuery());
     }
 
-    @GetMapping("/posts/disapprove/{id}")
-    public String disapprovePost(@PathVariable("id") Long id) {
-        this.postService.disapprovePost(id);
-        return "redirect:/admin/posts";
+    @GetMapping("/moderators/{query}")
+    public String searchResults(@PathVariable String query, Model model) {
+        model.addAttribute("user", this.userService.getUserDTOByUsername(query));
+        return "admin-moderators";
     }
 
-    @GetMapping("/comments")
-    public String comments(Model model,
-                           @PageableDefault(size = 9) Pageable pageable) {
-        model.addAttribute("comments", this.commentService.getAllNotApprovedCommentsOrderedByDateDesc(pageable));
-        return "admin-comments";
+    @GetMapping("/moderators/make/{username}")
+    public String makeModerator(@PathVariable("username") String username) {
+        this.userService.makeModerator(username);
+        return "redirect:/admin/moderators";
     }
 
-    @GetMapping("/comments/approve/{id}")
-    public String approveComment(@PathVariable("id") Long id) {
-        this.commentService.approveComment(id);
-        return "redirect:/admin/comments";
+    @GetMapping("/moderators/remove/{username}")
+    public String removeModerator(@PathVariable("username") String username) {
+        this.userService.removeModerator(username);
+        return "redirect:/admin/moderators";
     }
 
-    @GetMapping("/comments/disapprove/{id}")
-    public String disapproveComment(@PathVariable("id") Long id) {
-        this.commentService.disapproveComment(id);
-        return "redirect:/admin/comments";
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public ModelAndView onInvalidUsernamePathVariable(UsernameNotFoundException e) {
+        ModelAndView modelAndView = new ModelAndView("username-not-found");
+        modelAndView.addObject("username", e.getUsername());
+
+        return modelAndView;
     }
 }

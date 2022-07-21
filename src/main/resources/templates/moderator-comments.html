@@ -30,10 +30,10 @@
             </div>
         </div>
         <div class="col col-3 mb-1">
-            <a class="btn btn-success" type="button" th:href="@{/admin/comments/approve/{id}(id = ${c.id})}">
+            <a class="btn btn-success" type="button" th:href="@{/moderator/comments/approve/{id}(id = ${c.id})}">
                 Approve
             </a>
-            <a class="btn btn-danger" type="button" th:href="@{/admin/comments/disapprove/{id}(id = ${c.id})}">
+            <a class="btn btn-danger" type="button" th:href="@{/moderator/comments/disapprove/{id}(id = ${c.id})}">
                 Disapprove
             </a>
         </div>
@@ -47,7 +47,7 @@
                 <ul class="pagination">
                     <li class="page-item mr-auto" th:classappend="${comments.isFirst()} ? 'disabled' : ''">
                         <a th:unless="${comments.isFirst()}"
-                           th:href="@{/admin/comments(size=${comments.getSize()}, page = 0)}"
+                           th:href="@{/moderator/comments(size=${comments.getSize()}, page = 0)}"
                            class="btn btn-info">First
                         </a>
                         <a th:if="${comments.isFirst()}"
@@ -62,7 +62,7 @@
                 <ul class="pagination">
                     <li class="page-item ml-auto" th:classappend="${comments.hasPrevious() ? '' : 'disabled'}">
                         <a th:if="${comments.hasPrevious()}"
-                           th:href="@{/admin/comments(size=${comments.getSize()}, page = ${comments.getNumber() - 1})}"
+                           th:href="@{/moderator/comments(size=${comments.getSize()}, page = ${comments.getNumber() - 1})}"
                            class="btn btn-info">Previous
                         </a>
                         <a th:unless="${comments.hasPrevious()}"
@@ -77,7 +77,7 @@
                 <ul class="pagination">
                     <li class="page-item mr-auto" th:classappend="${comments.hasNext() ? '' : 'disabled'}">
                         <a th:if="${comments.hasNext()}"
-                           th:href="@{/admin/comments(size=${comments.getSize()}, page = ${comments.getNumber() + 1})}"
+                           th:href="@{/moderator/comments(size=${comments.getSize()}, page = ${comments.getNumber() + 1})}"
                            class="btn btn-info">Next
                         </a>
                         <a th:unless="${comments.hasNext()}"
@@ -92,7 +92,7 @@
                 <ul class="pagination">
                     <li class="page-item ml-auto" th:classappend="${comments.isLast()} ? 'disabled' : ''">
                         <a th:unless="${comments.isLast()}"
-                           th:href="@{/admin/comments(size=${comments.getSize()}, page = ${comments.getTotalPages() - 1})}"
+                           th:href="@{/moderator/comments(size=${comments.getSize()}, page = ${comments.getTotalPages() - 1})}"
                            class="btn btn-info">Last
                         </a>
                         <a th:if="${comments.isLast()}"

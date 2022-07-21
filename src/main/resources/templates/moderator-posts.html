@@ -37,10 +37,10 @@
             </div>
         </div>
         <div class="col col-3 mb-1">
-            <a class="btn btn-success" type="button" th:href="@{/admin/posts/approve/{id}(id = ${p.id})}">
+            <a class="btn btn-success" type="button" th:href="@{/moderator/posts/approve/{id}(id = ${p.id})}">
                 Approve
             </a>
-            <a class="btn btn-danger" type="button" th:href="@{/admin/posts/disapprove/{id}(id = ${p.id})}">
+            <a class="btn btn-danger" type="button" th:href="@{/moderator/posts/disapprove/{id}(id = ${p.id})}">
                 Disapprove
             </a>
         </div>
@@ -54,7 +54,7 @@
                 <ul class="pagination">
                     <li class="page-item mr-auto" th:classappend="${posts.isFirst()} ? 'disabled' : ''">
                         <a th:unless="${posts.isFirst()}"
-                           th:href="@{/admin/posts(size=${posts.getSize()}, page = 0)}"
+                           th:href="@{/moderator/posts(size=${posts.getSize()}, page = 0)}"
                            class="btn btn-info">First
                         </a>
                         <a th:if="${posts.isFirst()}"
@@ -69,7 +69,7 @@
                 <ul class="pagination">
                     <li class="page-item ml-auto" th:classappend="${posts.hasPrevious() ? '' : 'disabled'}">
                         <a th:if="${posts.hasPrevious()}"
-                           th:href="@{/admin/posts(size=${posts.getSize()}, page = ${posts.getNumber() - 1})}"
+                           th:href="@{/moderator/posts(size=${posts.getSize()}, page = ${posts.getNumber() - 1})}"
                            class="btn btn-info">Previous
                         </a>
                         <a th:unless="${posts.hasPrevious()}"
@@ -84,7 +84,7 @@
                 <ul class="pagination">
                     <li class="page-item mr-auto" th:classappend="${posts.hasNext() ? '' : 'disabled'}">
                         <a th:if="${posts.hasNext()}"
-                           th:href="@{/admin/posts(size=${posts.getSize()}, page = ${posts.getNumber() + 1})}"
+                           th:href="@{/moderator/posts(size=${posts.getSize()}, page = ${posts.getNumber() + 1})}"
                            class="btn btn-info">Next
                         </a>
                         <a th:unless="${posts.hasNext()}"
@@ -99,7 +99,7 @@
                 <ul class="pagination">
                     <li class="page-item ml-auto" th:classappend="${posts.isLast()} ? 'disabled' : ''">
                         <a th:unless="${posts.isLast()}"
-                           th:href="@{/admin/posts(size=${posts.getSize()}, page = ${posts.getTotalPages() - 1})}"
+                           th:href="@{/moderator/posts(size=${posts.getSize()}, page = ${posts.getTotalPages() - 1})}"
                            class="btn btn-info">Last
                         </a>
                         <a th:if="${posts.isLast()}"

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <th:block th:include="~{fragments/meta-info}">Meta</th:block>
+</head>
+
+<body class="admin">
+
+<th:block th:include="~{fragments/navbar}">Navbar</th:block>
+
+<th:block th:include="~{fragments/admin-buttons}">Admin Buttons</th:block>
+
+<div class="container">
+    <h2 class="text-center text-white mt-3">Search for users</h2>
+    <form
+            th:action="@{/admin/moderators}"
+            th:method="POST"
+            th:object="${searchUserModel}"
+            class="form-inline mt-4 d-flex justify-content-center">
+        <div class="position-relative">
+            <input
+                    id="searchUser"
+                    th:field="*{query}"
+                    th:errorclass="is-invalid"
+                    class="form-control mr-sm-2 moderator-form"
+                    type="search"
+                    placeholder="Search by username..."
+                    aria-label="Search"
+            />
+            <div class="invalid-feedback errors alert alert-danger">
+                <p
+                        th:each="err : ${#fields.errors('query')}"
+                        th:text="${err}">
+                </p>
+            </div>
+        </div>
+        <button class="btn btn-outline-info my-2 my-sm-0" type="submit">Search</button>
+    </form>
+</div>
+
+<div th:if="${user != null}" class="container">
+    <div class="row mx-auto d-flex flex-row justify-content-center mt-5">
+        <div class="card col-sm-6 col-md-3 col-lg-4 m-1 p-0">
+            <div class="card-img-top-wrapper">
+                <img class="card-img-top" th:src="${user.imageUrl}" alt="Profile picture">
+            </div>
+            <div class="card-body pb-1">
+                <h6 class="card-title" th:text="${user.username}"></h6>
+            </div>
+            <ul class=" list-group list-group-flush">
+                <li class="list-group-item">
+                    <div class="card-text"><span th:text="'Full name: ' + ${user.fullName}"></span></div>
+                    <div class="card-text"><span th:text="'Email: ' + ${user.email}"></span></div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div th:if="${user != null}" class="container">
+    <div class="row justify-content-center">
+        <a th:if="${user.userRoles.size == 1}" class="btn btn-success mr-1" type="button"
+           th:href="@{/admin/moderators/make/{username}(username = ${user.username})}">
+            Make
+        </a>
+        <a th:if="${user.userRoles.size >= 2}" class="btn btn-danger ml-1" type="button"
+           th:href="@{/admin/moderators/remove/{username}(username = ${user.username})}">
+            Remove
+        </a>
+    </div>
+</div>
+
+</body>
+
+</html>

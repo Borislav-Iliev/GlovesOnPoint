@@ -29,6 +29,10 @@ public class UserRoleService {
     }
 
     public UserRoleEntity getUserRole() {
-       return this.userRoleRepository.findByUserRole(UserRoleEnum.USER).get();
+        return this.userRoleRepository.findByUserRole(UserRoleEnum.USER).get();
+    }
+
+    public UserRoleEntity getModeratorRole() {
+        return this.userRoleRepository.findByUserRole(UserRoleEnum.MODERATOR).get();
     }
 }
