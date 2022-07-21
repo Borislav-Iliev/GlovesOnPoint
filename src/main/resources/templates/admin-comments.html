@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <th:block th:include="~{fragments/meta-info}">Meta</th:block>
 </head>
@@ -13,34 +14,26 @@
 
 <div class="container">
     <div class="row mt-3 border-bottom"
-         th:each="p : ${posts.getContent()}">
+         th:each="c : ${comments.getContent()}">
         <div class="col">
             <div class="row">
-                <div class="col mt-1">
-                    <img th:src="@{${p.authorImageUrl}}" width="30" alt="profilePic">
+                <div class="col-2 mt-1">
+                    <img th:src="@{${c.authorImageUrl}}" width="30" alt="profilePic">
                     <p class="text-white"
-                       th:text="${p.authorUsername}">
+                       th:text="${c.authorUsername}">
                     </p>
                 </div>
+
                 <div class="col mt-1">
-                    <a th:href="@{/forum/posts/{id}(id = ${p.id})}">
-                        <p class="text-white"
-                           th:text="${p.title}">
-                        </p>
-                    </a>
-                </div>
-                <div class="col mt-1">
-                    <p class="text-white"
-                       th:text="${p.category}">
-                    </p>
+                    <p class="text-white" th:text="${c.content}"></p>
                 </div>
             </div>
         </div>
         <div class="col col-3 mb-1">
-            <a class="btn btn-success" type="button" th:href="@{/admin/posts/approve/{id}(id = ${p.id})}">
+            <a class="btn btn-success" type="button" th:href="@{/admin/comments/approve/{id}(id = ${c.id})}">
                 Approve
             </a>
-            <a class="btn btn-danger" type="button" th:href="@{/admin/posts/disapprove/{id}(id = ${p.id})}">
+            <a class="btn btn-danger" type="button" th:href="@{/admin/comments/disapprove/{id}(id = ${c.id})}">
                 Disapprove
             </a>
         </div>
@@ -52,12 +45,12 @@
         <div class="col">
             <nav>
                 <ul class="pagination">
-                    <li class="page-item mr-auto" th:classappend="${posts.isFirst()} ? 'disabled' : ''">
-                        <a th:unless="${posts.isFirst()}"
-                           th:href="@{/admin/posts(size=${posts.getSize()}, page = 0)}"
+                    <li class="page-item mr-auto" th:classappend="${comments.isFirst()} ? 'disabled' : ''">
+                        <a th:unless="${comments.isFirst()}"
+                           th:href="@{/admin/comments(size=${comments.getSize()}, page = 0)}"
                            class="btn btn-info">First
                         </a>
-                        <a th:if="${posts.isFirst()}"
+                        <a th:if="${comments.isFirst()}"
                            class="btn btn-info" href="">First
                         </a>
                     </li>
@@ -67,12 +60,12 @@
         <div class="col">
             <nav>
                 <ul class="pagination">
-                    <li class="page-item ml-auto" th:classappend="${posts.hasPrevious() ? '' : 'disabled'}">
-                        <a th:if="${posts.hasPrevious()}"
-                           th:href="@{/admin/posts(size=${posts.getSize()}, page = ${posts.getNumber() - 1})}"
+                    <li class="page-item ml-auto" th:classappend="${comments.hasPrevious() ? '' : 'disabled'}">
+                        <a th:if="${comments.hasPrevious()}"
+                           th:href="@{/admin/comments(size=${comments.getSize()}, page = ${comments.getNumber() - 1})}"
                            class="btn btn-info">Previous
                         </a>
-                        <a th:unless="${posts.hasPrevious()}"
+                        <a th:unless="${comments.hasPrevious()}"
                            class="btn btn-info" href="">Previous
                         </a>
                     </li>
@@ -82,12 +75,12 @@
         <div class="col">
             <nav>
                 <ul class="pagination">
-                    <li class="page-item mr-auto" th:classappend="${posts.hasNext() ? '' : 'disabled'}">
-                        <a th:if="${posts.hasNext()}"
-                           th:href="@{/admin/posts(size=${posts.getSize()}, page = ${posts.getNumber() + 1})}"
+                    <li class="page-item mr-auto" th:classappend="${comments.hasNext() ? '' : 'disabled'}">
+                        <a th:if="${comments.hasNext()}"
+                           th:href="@{/admin/comments(size=${comments.getSize()}, page = ${comments.getNumber() + 1})}"
                            class="btn btn-info">Next
                         </a>
-                        <a th:unless="${posts.hasNext()}"
+                        <a th:unless="${comments.hasNext()}"
                            class="btn btn-info" href="">Next
                         </a>
                     </li>
@@ -97,12 +90,12 @@
         <div class="col">
             <nav>
                 <ul class="pagination">
-                    <li class="page-item ml-auto" th:classappend="${posts.isLast()} ? 'disabled' : ''">
-                        <a th:unless="${posts.isLast()}"
-                           th:href="@{/admin/posts(size=${posts.getSize()}, page = ${posts.getTotalPages() - 1})}"
+                    <li class="page-item ml-auto" th:classappend="${comments.isLast()} ? 'disabled' : ''">
+                        <a th:unless="${comments.isLast()}"
+                           th:href="@{/admin/comments(size=${comments.getSize()}, page = ${comments.getTotalPages() - 1})}"
                            class="btn btn-info">Last
                         </a>
-                        <a th:if="${posts.isLast()}"
+                        <a th:if="${comments.isLast()}"
                            class="btn btn-info" href="">Last
                         </a>
                     </li>

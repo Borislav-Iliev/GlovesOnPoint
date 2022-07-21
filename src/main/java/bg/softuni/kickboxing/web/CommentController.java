@@ -4,6 +4,8 @@ import bg.softuni.kickboxing.model.dto.comment.AddCommentDTO;
 import bg.softuni.kickboxing.model.user.KickboxingUserDetails;
 import bg.softuni.kickboxing.service.CommentService;
 import bg.softuni.kickboxing.service.PostService;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -50,6 +52,10 @@ public class CommentController {
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.addCommentModel", bindingResult);
 
             return "redirect:/forum/posts/{id}/add/comment";
+        }
+
+        if (userDetails.getRole().equals("USER")) {
+            redirectAttributes.addFlashAttribute("success", "Your comment will be reviewed by a moderator.");
         }
 
         this.commentService.addComment(id, addCommentModel, userDetails);

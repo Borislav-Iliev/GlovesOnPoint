@@ -1,6 +1,6 @@
 package bg.softuni.kickboxing.web;
 
-import bg.softuni.kickboxing.model.exception.ObjectNotFoundException;
+import bg.softuni.kickboxing.service.CommentService;
 import bg.softuni.kickboxing.service.PostService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -15,9 +15,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class AdminController {
 
     private final PostService postService;
+    private final CommentService commentService;
 
-    public AdminController(PostService postService) {
+    public AdminController(PostService postService, CommentService commentService) {
         this.postService = postService;
+        this.commentService = commentService;
     }
 
     @GetMapping("")
@@ -27,22 +29,39 @@ public class AdminController {
 
     @GetMapping("/posts")
     public String posts(Model model,
-                        @PageableDefault(
-                                page = 0,
-                                size = 9) Pageable pageable) {
+                        @PageableDefault(size = 9) Pageable pageable) {
         model.addAttribute("posts", this.postService.getAllNotApprovedPostsOrderedByDateDesc(pageable));
         return "admin-posts";
     }
 
     @GetMapping("/posts/approve/{id}")
-    public String approvePost(@PathVariable Long id) {
+    public String approvePost(@PathVariable("id") Long id) {
         this.postService.approvePost(id);
         return "redirect:/admin/posts";
     }
 
     @GetMapping("/posts/disapprove/{id}")
-    public String disapprovePost(@PathVariable Long id) {
+    public String disapprovePost(@PathVariable("id") Long id) {
         this.postService.disapprovePost(id);
         return "redirect:/admin/posts";
+    }
+
+    @GetMapping("/comments")
+    public String comments(Model model,
+                           @PageableDefault(size = 9) Pageable pageable) {
+        model.addAttribute("comments", this.commentService.getAllNotApprovedCommentsOrderedByDateDesc(pageable));
+        return "admin-comments";
+    }
+
+    @GetMapping("/comments/approve/{id}")
+    public String approveComment(@PathVariable("id") Long id) {
+        this.commentService.approveComment(id);
+        return "redirect:/admin/comments";
+    }
+
+    @GetMapping("/comments/disapprove/{id}")
+    public String disapproveComment(@PathVariable("id") Long id) {
+        this.commentService.disapproveComment(id);
+        return "redirect:/admin/comments";
     }
 }

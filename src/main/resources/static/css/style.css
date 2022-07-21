@@ -227,3 +227,12 @@
     text-align: center;
     color: #fff;
 }
+
+.comments {
+    margin: 4px 4px;
+    padding: 4px;
+    height: 550px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    text-align: justify;
+}

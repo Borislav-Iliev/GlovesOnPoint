@@ -2,9 +2,12 @@ package bg.softuni.kickboxing.model.dto.post;
 
 import bg.softuni.kickboxing.model.dto.comment.CommentDTO;
 import bg.softuni.kickboxing.model.enums.PostCategoryEnum;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class PostDetailsDTO {
     private Long id;
@@ -68,6 +71,13 @@ public class PostDetailsDTO {
     }
 
     public List<CommentDTO> getComments() {
-        return comments;
+        return comments
+                .stream()
+                .filter(CommentDTO::isApproved)
+                .collect(Collectors.toList());
+    }
+
+    public Page<CommentDTO> getCommentsPage() {
+        return new PageImpl<>(this.comments);
     }
 }

@@ -2,14 +2,17 @@ package bg.softuni.kickboxing.service;
 
 import bg.softuni.kickboxing.model.dto.comment.AddCommentDTO;
 import bg.softuni.kickboxing.model.dto.comment.CommentDTO;
+import bg.softuni.kickboxing.model.dto.post.PostDTO;
 import bg.softuni.kickboxing.model.entity.CommentEntity;
 import bg.softuni.kickboxing.model.entity.PostEntity;
 import bg.softuni.kickboxing.model.entity.UserEntity;
+import bg.softuni.kickboxing.model.exception.ObjectNotFoundException;
 import bg.softuni.kickboxing.model.user.KickboxingUserDetails;
 import bg.softuni.kickboxing.repository.CommentRepository;
 import bg.softuni.kickboxing.repository.PostRepository;
 import bg.softuni.kickboxing.repository.UserRepository;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -51,5 +54,28 @@ public class CommentService {
         }
 
         this.commentRepository.save(comment);
+    }
+
+    public Page<CommentDTO> getAllNotApprovedCommentsOrderedByDateDesc(Pageable pageable) {
+        return this.commentRepository.getAllNotApprovedCommentsOrderedByCreatedOnDesc(pageable);
+    }
+
+    public void approveComment(Long id) {
+        CommentEntity comment = this.commentRepository
+                .findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException(id));
+        comment.setApproved(true);
+        this.commentRepository.save(comment);
+    }
+
+    public void disapproveComment(Long id) {
+        if (id > this.getIdOfLastObjectInTable()) {
+            throw new ObjectNotFoundException(id);
+        }
+        this.commentRepository.deleteById(id);
+    }
+
+    public Long getIdOfLastObjectInTable() {
+        return this.commentRepository.findTopByOrderByIdDesc().getId();
     }
 }
