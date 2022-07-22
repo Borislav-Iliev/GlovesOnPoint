@@ -28,9 +28,10 @@
             <h2 class="text-white border-bottom">Latest Updates</h2>
 
             <div class="row news-row"
-                 th:each="news : ${news}">
+                 th:each="news : ${news.getContent()}">
                 <div class="col-md-4 col-lg-4 col-sm-12">
-                    <img height="175px" class="card-image-top d-block w-100" th:src="@{${news.imageUrl}}" alt="News Picture">
+                    <img height="175px" class="card-image-top d-block w-100" th:src="@{${news.imageUrl}}"
+                         alt="News Picture">
                 </div>
 
                 <div class="col-md-8 col-lg-8 col-sm-12">
@@ -43,7 +44,7 @@
                     </h5>
 
                     <small class="news-small"
-                           th:text="${news.date}">
+                           th:text="${news.createdOn}">
                     </small>
 
                     <p class="summary pt-3"
@@ -60,6 +61,103 @@
 
         <div class="col-4">
             <h2 class="text-white border-bottom">Trending</h2>
+            <div class="row news-row"
+                 th:each="t : ${trending}">
+
+                <div class="col-6 col-md-4 col-lg-4 col-sm-12">
+                    <img height="175px" class="card-image-top d-block w-100" th:src="@{${t.imageUrl}}"
+                         alt="News Picture">
+                </div>
+
+                <div class="col-md-4 col-lg-4 col-sm-12">
+
+                    <h6>
+                        <a class="news-link" th:href="@{/news/details/{id}(id = ${t.id})}">
+                              <span
+                                      th:text="${t.title}">
+                              </span>
+                        </a>
+                    </h6>
+
+                    <small class="news-small"
+                           th:text="${t.createdOn}">
+                    </small>
+
+                    <p class="summary pt-3"
+                       th:text="${t.content}">
+                    </p>
+
+                    <div class="btn-group">
+                        <a sec:authorize="hasRole('MODERATOR')" type="button" class="btn btn-sm btn-outline-secondary"
+                           th:href="@{/news/delete/{id}(id = ${t.id})}">Delete</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row mt-1">
+        <div class="col">
+            <nav>
+                <ul class="pagination">
+                    <li class="page-item mr-auto" th:classappend="${news.isFirst()} ? 'disabled' : ''">
+                        <a th:unless="${news.isFirst()}"
+                           th:href="@{/news(size=${news.getSize()}, page = 0)}"
+                           class="btn btn-info">First
+                        </a>
+                        <a th:if="${news.isFirst()}"
+                           class="btn btn-info" href="">First
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <div class="col">
+            <nav>
+                <ul class="pagination">
+                    <li class="page-item ml-auto" th:classappend="${news.hasPrevious() ? '' : 'disabled'}">
+                        <a th:if="${news.hasPrevious()}"
+                           th:href="@{/news(size=${news.getSize()}, page = ${news.getNumber() - 1})}"
+                           class="btn btn-info">Previous
+                        </a>
+                        <a th:unless="${news.hasPrevious()}"
+                           class="btn btn-info" href="">Previous
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <div class="col">
+            <nav>
+                <ul class="pagination">
+                    <li class="page-item mr-auto" th:classappend="${news.hasNext() ? '' : 'disabled'}">
+                        <a th:if="${news.hasNext()}"
+                           th:href="@{/news(size=${news.getSize()}, page = ${news.getNumber() + 1})}"
+                           class="btn btn-info">Next
+                        </a>
+                        <a th:unless="${news.hasNext()}"
+                           class="btn btn-info" href="">Next
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <div class="col">
+            <nav>
+                <ul class="pagination">
+                    <li class="page-item ml-auto" th:classappend="${news.isLast()} ? 'disabled' : ''">
+                        <a th:unless="${news.isLast()}"
+                           th:href="@{/news(size=${news.getSize()}, page = ${news.getTotalPages() - 1})}"
+                           class="btn btn-info">Last
+                        </a>
+                        <a th:if="${news.isLast()}"
+                           class="btn btn-info" href="">Last
+                        </a>
+                    </li>
+                </ul>
+            </nav>
         </div>
     </div>
 </div>

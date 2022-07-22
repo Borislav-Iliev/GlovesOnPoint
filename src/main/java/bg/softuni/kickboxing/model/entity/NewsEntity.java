@@ -13,8 +13,8 @@ public class NewsEntity extends BaseEntity {
     @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
 
-    @Column(nullable = false)
-    private LocalDate date;
+    @Column(name = "created_on", nullable = false)
+    private LocalDate createdOn;
 
     @Column(columnDefinition = "TEXT", nullable = false)
     private String imageUrl;
@@ -41,12 +41,12 @@ public class NewsEntity extends BaseEntity {
         this.content = content;
     }
 
-    public LocalDate getDate() {
-        return date;
+    public LocalDate getCreatedOn() {
+        return createdOn;
     }
 
-    public void setDate(LocalDate date) {
-        this.date = date;
+    public void setCreatedOn(LocalDate date) {
+        this.createdOn = date;
     }
 
     public String getImageUrl() {

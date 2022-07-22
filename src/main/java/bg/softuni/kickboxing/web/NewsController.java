@@ -2,6 +2,8 @@ package bg.softuni.kickboxing.web;
 
 import bg.softuni.kickboxing.model.dto.news.AddNewsDTO;
 import bg.softuni.kickboxing.service.NewsService;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -28,8 +30,10 @@ public class NewsController {
     }
 
     @GetMapping("")
-    public String news(Model model) {
-        model.addAttribute("news", this.newsService.getAllNewsOrderedByDateDesc());
+    public String news(Model model,
+                       @PageableDefault(size = 4) Pageable pageable) {
+        model.addAttribute("news", this.newsService.getAllNewsOrderedByDateDesc(pageable));
+        model.addAttribute("trending", this.newsService.getAllTrendingNewsOrderedByDateDesc());
         return "news";
     }
 

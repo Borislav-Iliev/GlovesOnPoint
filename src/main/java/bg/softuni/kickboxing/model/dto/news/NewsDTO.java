@@ -7,17 +7,17 @@ public class NewsDTO {
     private String title;
     private String content;
     private String imageUrl;
-    private LocalDate date;
+    private LocalDate createdOn;
 
     public NewsDTO() {
     }
 
-    public NewsDTO(Long id, String title, String content, String imageUrl, LocalDate date) {
+    public NewsDTO(Long id, String title, String content, String imageUrl, LocalDate createdOn) {
         this.id = id;
         this.title = title;
         this.content = content;
         this.imageUrl = imageUrl;
-        this.date = date;
+        this.createdOn = createdOn;
     }
 
     public Long getId() {
@@ -36,7 +36,7 @@ public class NewsDTO {
         return imageUrl;
     }
 
-    public LocalDate getDate() {
-        return date;
+    public LocalDate getCreatedOn() {
+        return createdOn;
     }
 }

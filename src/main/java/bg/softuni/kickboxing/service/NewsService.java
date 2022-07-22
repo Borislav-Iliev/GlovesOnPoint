@@ -8,12 +8,14 @@ import bg.softuni.kickboxing.model.exception.ObjectNotFoundException;
 import bg.softuni.kickboxing.repository.NewsRepository;
 import bg.softuni.kickboxing.repository.UserRepository;
 import org.modelmapper.ModelMapper;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class NewsService {
@@ -31,7 +33,7 @@ public class NewsService {
     public void addNews(AddNewsDTO addNewsDto, UserDetails userDetails) {
         NewsEntity news = this.mapper.map(addNewsDto, NewsEntity.class);
 
-        news.setDate(LocalDate.now());
+        news.setCreatedOn(LocalDate.now());
 
         UserEntity author = this.userRepository
                 .findByUsername(userDetails.getUsername())
@@ -41,8 +43,16 @@ public class NewsService {
         this.newsRepository.save(news);
     }
 
-    public List<NewsDTO> getAllNewsOrderedByDateDesc() {
-        return this.newsRepository.findAllByOrderByDateDescIdDesc();
+    public Page<NewsDTO> getAllNewsOrderedByDateDesc(Pageable pageable) {
+        return this.newsRepository.findAllByOrderByCreatedOnDescIdDesc(pageable);
+    }
+
+    public List<NewsDTO> getAllTrendingNewsOrderedByDateDesc() {
+        return this.newsRepository
+                .findTrendingNewsOrderByCreatedOnDescIdDesc()
+                .stream()
+                .limit(3)
+                .collect(Collectors.toList());
     }
 
     public NewsEntity getNewsById(Long id) {
