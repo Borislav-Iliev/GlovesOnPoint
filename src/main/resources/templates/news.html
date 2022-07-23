@@ -48,7 +48,7 @@
                     </small>
 
                     <p class="summary pt-3"
-                       th:text="${news.content}">
+                       th:text="${news.getSummary()}">
                     </p>
 
                     <div class="btn-group">
@@ -84,7 +84,7 @@
                     </small>
 
                     <p class="summary pt-3"
-                       th:text="${t.content}">
+                       th:text="${t.getSummary()}">
                     </p>
 
                     <div class="btn-group">

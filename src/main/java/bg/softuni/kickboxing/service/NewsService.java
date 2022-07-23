@@ -55,9 +55,10 @@ public class NewsService {
                 .collect(Collectors.toList());
     }
 
-    public NewsEntity getNewsById(Long id) {
+    public NewsDTO getNewsById(Long id) {
         return this.newsRepository
                 .findById(id)
+                .map(n -> this.mapper.map(n, NewsDTO.class))
                 .orElseThrow(() -> new ObjectNotFoundException(id));
     }
 

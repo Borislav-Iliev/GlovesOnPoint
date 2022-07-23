@@ -12,7 +12,7 @@ public class AddNewsDTO {
     private String title;
 
     @NotBlank(message = "Content must be provided!")
-    @Size(min = 5, message = "Content length must be at least 5 characters!")
+    @Size(min = 15, message = "Content length must be at least 15 characters!")
     private String content;
 
     @NotBlank(message = "ImageUrl must be provided!")
