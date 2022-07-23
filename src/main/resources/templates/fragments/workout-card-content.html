@@ -12,7 +12,7 @@
             <div class="card-body">
                 <div class="text-center">
                     <p class="card-text border-bottom "><span th:text="${w.level}"></span></p>
-                    <p class="card-text border-bottom "><span th:text="${w.content}"></span></p>
+                    <p class="card-text border-bottom "><span th:text="${w.type}"></span></p>
                 </div>
                 <div class="d-flex justify-content-between align-items-center">
                     <div class="btn-group">
@@ -22,7 +22,7 @@
                     </div>
                     <div class="btn-group">
                         <a type="button" class="btn btn-sm btn-outline-secondary"
-                           th:href="@{/workouts/view/{id}(id = ${w.id})}">View</a>
+                           th:href="@{/workouts/details/{id}(id = ${w.id})}">View</a>
                     </div>
                 </div>
             </div>

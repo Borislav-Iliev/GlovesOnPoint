@@ -1,6 +1,7 @@
 package bg.softuni.kickboxing.model.entity;
 
 import bg.softuni.kickboxing.model.enums.WorkoutLevelEnum;
+import bg.softuni.kickboxing.model.enums.WorkoutTypeEnum;
 
 import javax.persistence.*;
 
@@ -9,8 +10,15 @@ import javax.persistence.*;
 public class WorkoutEntity extends BaseEntity {
 
     @Column(nullable = false)
+    private String title;
+
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private WorkoutLevelEnum level;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private WorkoutTypeEnum type;
 
     @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
@@ -24,12 +32,28 @@ public class WorkoutEntity extends BaseEntity {
     public WorkoutEntity() {
     }
 
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     public WorkoutLevelEnum getLevel() {
         return level;
     }
 
     public void setLevel(WorkoutLevelEnum level) {
         this.level = level;
+    }
+
+    public WorkoutTypeEnum getType() {
+        return type;
+    }
+
+    public void setType(WorkoutTypeEnum type) {
+        this.type = type;
     }
 
     public String getContent() {

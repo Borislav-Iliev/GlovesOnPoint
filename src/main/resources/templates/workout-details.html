@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <th:block th:include="~{fragments/meta-info}">Meta</th:block>
+</head>
+
+<body class="workouts">
+
+<th:block th:include="~{fragments/navbar}">Navbar</th:block>
+
+<div class="container"
+     th:object="${workout}">
+    <h3 class="text-white text-center border-bottom" th:text="*{title}"></h3>
+
+    <div class="row">
+        <div class="col-7">
+            <img class="mt-3 w-100 d-block" height="300px" th:src="@{*{imageUrl}}" alt="Workout Image">
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-7">
+              <textarea disabled
+                        class="text-white text-left bg-transparent w-100 border-0 workout-details-content"
+                        th:height="800px"
+                        th:text="*{content}">
+                </textarea>
+        </div>
+    </div>
+</div>
+
+</body>
+
+</html>

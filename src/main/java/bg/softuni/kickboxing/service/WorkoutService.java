@@ -14,8 +14,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 public class WorkoutService {
 
@@ -29,8 +27,8 @@ public class WorkoutService {
         this.mapper = mapper;
     }
 
-    public Page<WorkoutDTO> getAllWorkouts(Pageable pageable) {
-        return this.workoutRepository.findAllWorkouts(pageable);
+    public Page<WorkoutDTO> getAllWorkoutsOrderedByWorkoutLevel(Pageable pageable) {
+        return this.workoutRepository.findAllWorkoutsOrderedByWorkoutLevel(pageable);
     }
 
     public Page<WorkoutDTO> getAllWorkoutsByLevel(WorkoutLevelEnum level, Pageable pageable) {
@@ -57,5 +55,12 @@ public class WorkoutService {
 
     public Long getIdOfLastObjectInTable() {
         return this.workoutRepository.findTopByOrderByIdDesc().getId();
+    }
+
+    public WorkoutDTO getWorkoutById(Long id) {
+        return this.workoutRepository
+                .findById(id)
+                .map(w -> this.mapper.map(w, WorkoutDTO.class))
+                .orElseThrow(() -> new ObjectNotFoundException(id));
     }
 }

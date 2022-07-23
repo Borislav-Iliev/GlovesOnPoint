@@ -13,12 +13,13 @@ import org.springframework.stereotype.Repository;
 public interface WorkoutRepository extends JpaRepository<WorkoutEntity, Long> {
 
     @Query("SELECT new bg.softuni.kickboxing.model.dto.workout.WorkoutDTO" +
-            " (w.id, w.level, w.content, w.imageUrl)" +
-            " FROM WorkoutEntity w")
-    Page<WorkoutDTO> findAllWorkouts(Pageable pageable);
+            " (w.id, w.title, w.level, w.type, w.content, w.imageUrl)" +
+            " FROM WorkoutEntity w" +
+            " ORDER BY w.level")
+    Page<WorkoutDTO> findAllWorkoutsOrderedByWorkoutLevel(Pageable pageable);
 
     @Query("SELECT new bg.softuni.kickboxing.model.dto.workout.WorkoutDTO" +
-            " (w.id, w.level, w.content, w.imageUrl)" +
+            " (w.id, w.title, w.level, w.type, w.content, w.imageUrl)" +
             " FROM WorkoutEntity w" +
             " WHERE w.level = :level")
     Page<WorkoutDTO> findAllByLevel(WorkoutLevelEnum level, Pageable pageable);

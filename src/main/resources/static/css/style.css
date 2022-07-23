@@ -251,6 +251,16 @@
     scrollbar-width: none;
 }
 
+.workout-details-content::-webkit-scrollbar {
+    display: none;
+}
+
+.workout-details-content {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    height: 500px;
+}
+
 .moderator-form {
     width: 280px;
 }

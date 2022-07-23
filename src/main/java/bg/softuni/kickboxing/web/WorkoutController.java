@@ -35,7 +35,7 @@ public class WorkoutController {
                            @PageableDefault(
                                    page = 0,
                                    size = 8) Pageable pageable) {
-        model.addAttribute("workouts", this.workoutService.getAllWorkouts(pageable));
+        model.addAttribute("workouts", this.workoutService.getAllWorkoutsOrderedByWorkoutLevel(pageable));
         return "workouts";
     }
 
@@ -93,5 +93,11 @@ public class WorkoutController {
     public String deleteWorkout(@PathVariable Long id) {
         this.workoutService.deleteWorkout(id);
         return "redirect:/workouts";
+    }
+
+    @GetMapping("/details/{id}")
+    public String workoutDetails(@PathVariable("id") Long id, Model model) {
+        model.addAttribute("workout", this.workoutService.getWorkoutById(id));
+        return "workout-details";
     }
 }
