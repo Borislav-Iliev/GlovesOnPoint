@@ -116,7 +116,9 @@ public class UserService {
             userEntity.setPassword(this.passwordEncoder.encode(editUserModel.getPassword()));
         }
 
-        userEntity.setImageUrl(editUserModel.getImageUrl());
+        if (!editUserModel.getImageUrl().isBlank()) {
+            userEntity.setImageUrl(editUserModel.getImageUrl());
+        }
 
         this.userRepository.save(userEntity);
     }
