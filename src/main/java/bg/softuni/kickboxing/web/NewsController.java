@@ -40,6 +40,7 @@ public class NewsController {
     @GetMapping("/details/{id}")
     public String details(@PathVariable("id") Long id, Model model) {
         model.addAttribute("news", this.newsService.getNewsById(id));
+        this.newsService.increaseViewsCount(id);
         return "news-details";
     }
 

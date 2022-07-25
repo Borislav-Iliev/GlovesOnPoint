@@ -16,6 +16,9 @@ public class NewsEntity extends BaseEntity {
     @Column(name = "created_on", nullable = false)
     private LocalDate createdOn;
 
+    @Column(columnDefinition = "INTEGER DEFAULT 0")
+    public int views;
+
     @Column(columnDefinition = "TEXT", nullable = false)
     private String imageUrl;
 
@@ -47,6 +50,14 @@ public class NewsEntity extends BaseEntity {
 
     public void setCreatedOn(LocalDate date) {
         this.createdOn = date;
+    }
+
+    public int getViews() {
+        return views;
+    }
+
+    public void setViews(int views) {
+        this.views = views;
     }
 
     public String getImageUrl() {

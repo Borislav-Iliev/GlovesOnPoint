@@ -13,10 +13,6 @@ public class AddPostDTO {
     @Size(min = 2, message = "Title length must be at least 2 characters!")
     private String title;
 
-    @NotBlank(message = "ImageUrl must be provided!")
-    @URL(message = "Must be a valid Url!")
-    private String imageUrl;
-
     @NotBlank(message = "Content must be provided!")
     @Size(min = 5, message = "Content length must be at least 5 characters!")
     private String content;
@@ -33,14 +29,6 @@ public class AddPostDTO {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
     }
 
     public String getContent() {

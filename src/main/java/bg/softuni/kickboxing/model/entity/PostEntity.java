@@ -23,9 +23,6 @@ public class PostEntity extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private PostCategoryEnum category;
 
-    @Column(nullable = false)
-    private String imageUrl;
-
     @Column(columnDefinition = "INTEGER DEFAULT 0", nullable = false)
     private int views;
 
@@ -68,14 +65,6 @@ public class PostEntity extends BaseEntity {
 
     public void setCategory(PostCategoryEnum category) {
         this.category = category;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
     }
 
     public int getViews() {

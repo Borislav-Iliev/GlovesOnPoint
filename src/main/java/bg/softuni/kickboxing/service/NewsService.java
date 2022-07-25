@@ -72,4 +72,12 @@ public class NewsService {
     public Long getIdOfLastObjectInTable() {
         return this.newsRepository.findTopByOrderByIdDesc().getId();
     }
+
+    public void increaseViewsCount(Long id) {
+        NewsEntity news = this.newsRepository
+                .findById(id)
+                .orElseThrow();
+        news.setViews(news.getViews() + 1);
+        this.newsRepository.save(news);
+    }
 }

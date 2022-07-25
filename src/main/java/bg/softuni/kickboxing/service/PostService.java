@@ -1,6 +1,5 @@
 package bg.softuni.kickboxing.service;
 
-import bg.softuni.kickboxing.model.dto.comment.CommentDTO;
 import bg.softuni.kickboxing.model.dto.post.AddPostDTO;
 import bg.softuni.kickboxing.model.dto.post.PostDTO;
 import bg.softuni.kickboxing.model.dto.post.PostDetailsDTO;
@@ -16,7 +15,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.stream.Collectors;
 
 @Service
 public class PostService {
