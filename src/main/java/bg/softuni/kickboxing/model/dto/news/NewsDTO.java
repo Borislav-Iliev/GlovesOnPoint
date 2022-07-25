@@ -7,16 +7,18 @@ public class NewsDTO {
     private String title;
     private String content;
     private String imageUrl;
+    private int views;
     private LocalDate createdOn;
 
     public NewsDTO() {
     }
 
-    public NewsDTO(Long id, String title, String content, String imageUrl, LocalDate createdOn) {
+    public NewsDTO(Long id, String title, String content, String imageUrl, int views, LocalDate createdOn) {
         this.id = id;
         this.title = title;
         this.content = content;
         this.imageUrl = imageUrl;
+        this.views = views;
         this.createdOn = createdOn;
     }
 
@@ -50,6 +52,14 @@ public class NewsDTO {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public int getViews() {
+        return views;
+    }
+
+    public void setViews(int views) {
+        this.views = views;
     }
 
     public LocalDate getCreatedOn() {

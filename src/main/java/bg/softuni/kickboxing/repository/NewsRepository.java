@@ -14,15 +14,15 @@ import java.util.List;
 public interface NewsRepository extends JpaRepository<NewsEntity, Long> {
 
     @Query("SELECT new bg.softuni.kickboxing.model.dto.news.NewsDTO" +
-            " (n.id, n.title, n.content, n.imageUrl, n.createdOn)" +
+            " (n.id, n.title, n.content, n.imageUrl, n.views, n.createdOn)" +
             " FROM NewsEntity n" +
             " ORDER BY n.createdOn DESC, n.id DESC")
     Page<NewsDTO> findAllByOrderByCreatedOnDescIdDesc(Pageable pageable);
 
     @Query("SELECT new bg.softuni.kickboxing.model.dto.news.NewsDTO" +
-            " (n.id, n.title, n.content, n.imageUrl, n.createdOn)" +
+            " (n.id, n.title, n.content, n.imageUrl, n.views, n.createdOn)" +
             " FROM NewsEntity n" +
-            " ORDER BY n.createdOn DESC, n.id DESC")
+            " ORDER BY n.views DESC, n.createdOn DESC, n.id DESC")
     List<NewsDTO> findTrendingNewsOrderByCreatedOnDescIdDesc();
 
     NewsEntity findTopByOrderByIdDesc();

@@ -10,6 +10,7 @@ import bg.softuni.kickboxing.repository.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -79,5 +80,15 @@ public class NewsService {
                 .orElseThrow();
         news.setViews(news.getViews() + 1);
         this.newsRepository.save(news);
+    }
+
+    @Scheduled(cron = "0 0 0 * * MON")
+    public void resetViews() {
+        this.newsRepository
+                .findAll()
+                .forEach(n -> {
+                    n.setViews(0);
+                    this.newsRepository.save(n);
+                });
     }
 }
