@@ -1,7 +1,7 @@
 package bg.softuni.kickboxing.config;
 
 import bg.softuni.kickboxing.repository.UserRepository;
-import bg.softuni.kickboxing.service.KickboxingUserDetailsService;
+import bg.softuni.kickboxing.service.GlovesOnPointUserDetailsService;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -47,6 +47,6 @@ public class SecurityConfiguration {
 
     @Bean
     public UserDetailsService userDetailsService(UserRepository userRepository) {
-        return new KickboxingUserDetailsService(userRepository);
+        return new GlovesOnPointUserDetailsService(userRepository);
     }
 }

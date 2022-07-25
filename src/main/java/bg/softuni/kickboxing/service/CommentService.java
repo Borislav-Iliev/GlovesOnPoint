@@ -2,12 +2,11 @@ package bg.softuni.kickboxing.service;
 
 import bg.softuni.kickboxing.model.dto.comment.AddCommentDTO;
 import bg.softuni.kickboxing.model.dto.comment.CommentDTO;
-import bg.softuni.kickboxing.model.dto.post.PostDTO;
 import bg.softuni.kickboxing.model.entity.CommentEntity;
 import bg.softuni.kickboxing.model.entity.PostEntity;
 import bg.softuni.kickboxing.model.entity.UserEntity;
 import bg.softuni.kickboxing.model.exception.ObjectNotFoundException;
-import bg.softuni.kickboxing.model.user.KickboxingUserDetails;
+import bg.softuni.kickboxing.model.user.GlovesOnPointUserDetails;
 import bg.softuni.kickboxing.repository.CommentRepository;
 import bg.softuni.kickboxing.repository.PostRepository;
 import bg.softuni.kickboxing.repository.UserRepository;
@@ -17,7 +16,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 public class CommentService {
@@ -34,7 +32,7 @@ public class CommentService {
         this.userRepository = userRepository;
     }
 
-    public void addComment(Long id, AddCommentDTO addCommentDTO, KickboxingUserDetails userDetails) {
+    public void addComment(Long id, AddCommentDTO addCommentDTO, GlovesOnPointUserDetails userDetails) {
         CommentEntity comment = this.mapper.map(addCommentDTO, CommentEntity.class);
 
         comment.setCreatedOn(LocalDateTime.now());

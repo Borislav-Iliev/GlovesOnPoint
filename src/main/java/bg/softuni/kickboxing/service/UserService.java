@@ -1,10 +1,10 @@
 package bg.softuni.kickboxing.service;
 
+import bg.softuni.kickboxing.model.dto.user.EditUserDTO;
 import bg.softuni.kickboxing.model.dto.user.UserDTO;
 import bg.softuni.kickboxing.model.dto.user.UserRegistrationDTO;
 import bg.softuni.kickboxing.model.entity.UserEntity;
 import bg.softuni.kickboxing.model.entity.UserRoleEntity;
-import bg.softuni.kickboxing.model.exception.ObjectNotFoundException;
 import bg.softuni.kickboxing.model.exception.UsernameNotFoundException;
 import bg.softuni.kickboxing.repository.UserRepository;
 import org.modelmapper.ModelMapper;
@@ -68,8 +68,17 @@ public class UserService {
     }
 
     public UserDTO getUserDTOByUsername(String username) {
-        UserEntity userEntity = this.userRepository.findByUsername(username).orElseThrow();
-        return this.mapper.map(userEntity, UserDTO.class);
+        return this.userRepository
+                .findByUsername(username)
+                .map(u -> this.mapper.map(u, UserDTO.class))
+                .orElseThrow();
+    }
+
+    public UserDTO getUserDTOById(Long id) {
+        return this.userRepository
+                .findById(id)
+                .map(u -> this.mapper.map(u, UserDTO.class))
+                .orElseThrow();
     }
 
     public void makeModerator(String username) {
@@ -86,5 +95,36 @@ public class UserService {
                 .orElseThrow(() -> new UsernameNotFoundException(username));
         user.removeModeratorRole();
         this.userRepository.save(user);
+    }
+
+    public void editProfile(EditUserDTO editUserModel, Long id) {
+        UserEntity userEntity = this.userRepository.findById(id).orElseThrow();
+
+        if (validateField(editUserModel.getUsername(), 2, 20)) {
+            userEntity.setUsername(editUserModel.getUsername());
+        }
+
+        if (validateField(editUserModel.getFirstName(), 2, 20)) {
+            userEntity.setFirstName(editUserModel.getFirstName());
+        }
+
+        if (validateField(editUserModel.getLastName(), 2, 20)) {
+            userEntity.setLastName(editUserModel.getLastName());
+        }
+
+        if (validateField(editUserModel.getPassword(), 3, 20)) {
+            userEntity.setPassword(this.passwordEncoder.encode(editUserModel.getPassword()));
+        }
+
+        userEntity.setImageUrl(editUserModel.getImageUrl());
+
+        this.userRepository.save(userEntity);
+    }
+
+    private boolean validateField(String field, int minLength, int maxLength) {
+        if (field.length() >= minLength && field.length() <= maxLength && !field.isBlank()) {
+            return true;
+        }
+        return false;
     }
 }

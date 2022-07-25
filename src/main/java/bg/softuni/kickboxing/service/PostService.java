@@ -7,7 +7,7 @@ import bg.softuni.kickboxing.model.dto.post.PostDetailsDTO;
 import bg.softuni.kickboxing.model.entity.PostEntity;
 import bg.softuni.kickboxing.model.entity.UserEntity;
 import bg.softuni.kickboxing.model.exception.ObjectNotFoundException;
-import bg.softuni.kickboxing.model.user.KickboxingUserDetails;
+import bg.softuni.kickboxing.model.user.GlovesOnPointUserDetails;
 import bg.softuni.kickboxing.repository.PostRepository;
 import bg.softuni.kickboxing.repository.UserRepository;
 import org.modelmapper.ModelMapper;
@@ -31,7 +31,7 @@ public class PostService {
         this.mapper = mapper;
     }
 
-    public void addPost(AddPostDTO addPostDTO, KickboxingUserDetails userDetails) {
+    public void addPost(AddPostDTO addPostDTO, GlovesOnPointUserDetails userDetails) {
         PostEntity post = this.mapper.map(addPostDTO, PostEntity.class);
 
         post.setCreatedOn(LocalDateTime.now());
@@ -61,20 +61,10 @@ public class PostService {
     }
 
     public PostDetailsDTO getPostDetailsById(Long id) {
-        PostEntity post = this.postRepository
+        return this.postRepository
                 .findById(id)
+                .map(p -> this.mapper.map(p, PostDetailsDTO.class))
                 .orElseThrow(() -> new ObjectNotFoundException(id));
-
-        return this.mapToPostDetailsDTO(post);
-    }
-
-    // Model mapper could not map the entity to the dto,
-    // so I had to manually do it.
-    private PostDetailsDTO mapToPostDetailsDTO(PostEntity post) {
-        return new PostDetailsDTO(post.getId(), post.getTitle(), post.getContent(), post.getCategory(),
-                post.getViews(), post.getCreatedOn(),
-                post.getComments().stream().map(c -> this.mapper.map(c, CommentDTO.class)).collect(Collectors.toList()),
-                post.getAuthor().getUsername(), post.getAuthor().getImageUrl());
     }
 
     public void increaseViewsCount(Long id) {

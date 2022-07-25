@@ -1,11 +1,9 @@
 package bg.softuni.kickboxing.web;
 
 import bg.softuni.kickboxing.model.dto.comment.AddCommentDTO;
-import bg.softuni.kickboxing.model.user.KickboxingUserDetails;
+import bg.softuni.kickboxing.model.user.GlovesOnPointUserDetails;
 import bg.softuni.kickboxing.service.CommentService;
 import bg.softuni.kickboxing.service.PostService;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -45,7 +43,7 @@ public class CommentController {
                              @Valid AddCommentDTO addCommentModel,
                              BindingResult bindingResult,
                              RedirectAttributes redirectAttributes,
-                             @AuthenticationPrincipal KickboxingUserDetails userDetails) {
+                             @AuthenticationPrincipal GlovesOnPointUserDetails userDetails) {
 
         if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute("addCommentModel", addCommentModel);

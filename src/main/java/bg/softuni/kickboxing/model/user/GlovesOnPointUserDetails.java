@@ -8,8 +8,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 
-public class KickboxingUserDetails implements UserDetails {
+public class GlovesOnPointUserDetails implements UserDetails {
 
+    private Long id;
     private final String username;
     private final String firstName;
     private final String lastName;
@@ -20,7 +21,8 @@ public class KickboxingUserDetails implements UserDetails {
     private final List<CommentEntity> comments;
     private final Collection<GrantedAuthority> authorities;
 
-    public KickboxingUserDetails(String username, String firstName, String lastName, String email, String password, String imageUrl, List<PostEntity> posts, List<CommentEntity> comments, Collection<GrantedAuthority> authorities) {
+    public GlovesOnPointUserDetails(Long id, String username, String firstName, String lastName, String email, String password, String imageUrl, List<PostEntity> posts, List<CommentEntity> comments, Collection<GrantedAuthority> authorities) {
+        this.id = id;
         this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -30,6 +32,10 @@ public class KickboxingUserDetails implements UserDetails {
         this.posts = posts;
         this.comments = comments;
         this.authorities = authorities;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getFirstName() {

@@ -39,28 +39,67 @@ public class PostDetailsDTO {
         return id;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public String getTitle() {
         return title;
     }
 
-    public PostCategoryEnum getCategory() {
-        return category;
-    }
-
-    public int getViews() {
-        return views;
-    }
-
-    public LocalDateTime getCreatedOn() {
-        return createdOn;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getContent() {
         return content;
     }
 
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public PostCategoryEnum getCategory() {
+        return category;
+    }
+
+    public void setCategory(PostCategoryEnum category) {
+        this.category = category;
+    }
+
+    public int getViews() {
+        return views;
+    }
+
+    public void setViews(int views) {
+        this.views = views;
+    }
+
+    public LocalDateTime getCreatedOn() {
+        return createdOn;
+    }
+
+    public void setCreatedOn(LocalDateTime createdOn) {
+        this.createdOn = createdOn;
+    }
+
+    public List<CommentDTO> getComments() {
+        return comments
+                .stream()
+                .filter(CommentDTO::isApproved)
+                .collect(Collectors.toList());
+    }
+
+    public void setComments(List<CommentDTO> comments) {
+        this.comments = comments;
+    }
+
     public String getAuthorUsername() {
         return authorUsername;
+    }
+
+    public void setAuthorUsername(String authorUsername) {
+        this.authorUsername = authorUsername;
     }
 
     public String getAuthorImageUrl() {
@@ -70,11 +109,8 @@ public class PostDetailsDTO {
         return authorImageUrl;
     }
 
-    public List<CommentDTO> getComments() {
-        return comments
-                .stream()
-                .filter(CommentDTO::isApproved)
-                .collect(Collectors.toList());
+    public void setAuthorImageUrl(String authorImageUrl) {
+        this.authorImageUrl = authorImageUrl;
     }
 
     public Page<CommentDTO> getCommentsPage() {

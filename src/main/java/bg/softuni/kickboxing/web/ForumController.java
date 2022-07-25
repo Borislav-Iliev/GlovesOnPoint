@@ -1,7 +1,7 @@
 package bg.softuni.kickboxing.web;
 
 import bg.softuni.kickboxing.model.dto.post.AddPostDTO;
-import bg.softuni.kickboxing.model.user.KickboxingUserDetails;
+import bg.softuni.kickboxing.model.user.GlovesOnPointUserDetails;
 import bg.softuni.kickboxing.service.CommentService;
 import bg.softuni.kickboxing.service.PostService;
 import org.springframework.data.domain.Pageable;
@@ -48,7 +48,7 @@ public class ForumController {
     public String addPost(@Valid AddPostDTO addPostModel,
                           BindingResult bindingResult,
                           RedirectAttributes redirectAttributes,
-                          @AuthenticationPrincipal KickboxingUserDetails userDetails) {
+                          @AuthenticationPrincipal GlovesOnPointUserDetails userDetails) {
 
         if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute("addPostModel", addPostModel);

@@ -15,7 +15,7 @@
         <div class="col">
 
             <div class="text-center">
-                <img th:src="@{${#authentication.principal.imageUrl}}" width="100" alt="Profile Picture"
+                <img th:src="@{${user.imageUrl}}" width="100" alt="Profile Picture"
                      class="rounded-circle">
             </div>
 
@@ -31,13 +31,13 @@
                 <div class="col">
                     <h4 class="text-white mt-3">Username</h4>
                     <span class="mt-2 mb-0"
-                          th:text="${#authentication.principal.username}">
+                          th:text="${user.username}">
                     </span>
                 </div>
                 <div class="col">
                     <h4 class="text-white mt-3">Email</h4>
                     <span class="mt-2 mb-0"
-                          th:text="${#authentication.principal.email}">
+                          th:text="${user.email}">
                     </span>
                 </div>
             </div>
@@ -46,13 +46,13 @@
                 <div class="col">
                     <h4 class="text-white mt-3">First Name</h4>
                     <span class="mt-2 mb-0"
-                          th:text="${#authentication.principal.firstName}">
+                          th:text="${user.firstName}">
                     </span>
                 </div>
                 <div class="col">
                     <h4 class="text-white mt-3">Last Name</h4>
                     <span class="mt-2 mb-0"
-                          th:text="${#authentication.principal.lastName}">
+                          th:text="${user.lastName}">
                     </span>
                 </div>
             </div>
@@ -74,7 +74,12 @@
                 </div>
             </div>
 
-
+            <div class="row justify-content-center mt-4">
+                <a th:href="@{/users/profile/edit/{id}(id = ${#authentication.principal.id})}">
+                    <button type="button" class="home-button"><span class="home-button-span"></span> Edit Profile
+                    </button>
+                </a>
+            </div>
         </div>
     </div>
 </div>

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <th:block th:include="~{fragments/meta-info}">Meta</th:block>
+</head>
+
+<body class="profile">
+
+<th:block th:include="~{fragments/navbar}">Navbar</th:block>
+
+<div class="container">
+    <div class="col-lg-12 text-lg-center">
+        <h2 class="text-white">Edit Profile</h2>
+        <br>
+        <div class="alert alert-success text-center" role="alert" th:text="${success}" th:if="${success}"></div>
+        <br>
+    </div>
+    <div class="col-lg-8 push-lg-4 personal-info">
+        <form
+                th:action="@{/users/profile/edit/{id}(id = ${#authentication.principal.id})}"
+                th:method="post"
+                th:object="${editUserModel}">
+            <div class="form-group row">
+                <label for="username" class="col-lg-3 col-form-label form-control-label text-white">Username</label>
+                <div class="col-lg-9">
+                    <input
+                            id="username"
+                            th:field="*{username}"
+                            th:errorclass="is-invalid"
+                            th:placeholder="${user.username}"
+                            class="form-control"
+                            type="text"/>
+                    <div class="invalid-feedback errors alert alert-danger">
+                        <p
+                                th:each="err : ${#fields.errors('username')}"
+                                th:text="${err}">
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="email" class="col-lg-3 col-form-label form-control-label text-white">Email</label>
+                <div class="col-lg-9">
+                    <input
+                            id="email"
+                            th:field="*{email}"
+                            th:errorclass="is-invalid"
+                            th:placeholder="${user.email}"
+                            class="form-control"
+                            type="text"/>
+                    <div class="invalid-feedback errors alert alert-danger">
+                        <p
+                                th:each="err : ${#fields.errors('email')}"
+                                th:text="${err}">
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="firstName" class="col-lg-3 col-form-label form-control-label text-white">First Name</label>
+                <div class="col-lg-9">
+                    <input
+                            id="firstName"
+                            th:field="*{firstName}"
+                            th:errorclass="is-invalid"
+                            th:placeholder="${user.firstName}"
+                            class="form-control"
+                            type="text"/>
+                    <div class="invalid-feedback errors alert alert-danger">
+                        <p
+                                th:each="err : ${#fields.errors('firstName')}"
+                                th:text="${err}">
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="lastName" class="col-lg-3 col-form-label form-control-label text-white">Last Name</label>
+                <div class="col-lg-9">
+                    <input
+                            id="lastName"
+                            th:field="*{lastName}"
+                            th:errorclass="is-invalid"
+                            th:placeholder="${user.lastName}"
+                            class="form-control"
+                            type="text"/>
+                    <div class="invalid-feedback errors alert alert-danger">
+                        <p
+                                th:each="err : ${#fields.errors('lastName')}"
+                                th:text="${err}">
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="imageUrl" class="col-lg-3 col-form-label form-control-label text-white">Profile Picture
+                    Url</label>
+                <div class="col-lg-9">
+                    <input
+                            id="imageUrl"
+                            th:field="*{imageUrl}"
+                            th:errorclass="is-invalid"
+                            th:placeholder="${user.imageUrl}"
+                            class="form-control"
+                            type="text"/>
+                    <div class="invalid-feedback errors alert alert-danger">
+                        <p
+                                th:each="err : ${#fields.errors('imageUrl')}"
+                                th:text="${err}">
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="password" class="col-lg-3 col-form-label form-control-label text-white">Password</label>
+                <div class="col-lg-9">
+                    <input
+                            id="password"
+                            th:field="*{password}"
+                            th:errorclass="is-invalid"
+                            class="form-control"
+                            type="password"
+                            placeholder="Password"/>
+                    <div class="invalid-feedback errors alert alert-danger">
+                        <p
+                                th:each="err : ${#fields.errors('password')}"
+                                th:text="${err}">
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="confirmPassword" class="col-lg-3 col-form-label form-control-label text-white">Confirm
+                    Password</label>
+                <div class="col-lg-9">
+                    <input
+                            id="confirmPassword"
+                            th:field="*{confirmPassword}"
+                            th:errorclass="is-invalid"
+                            class="form-control"
+                            type="password"
+                            placeholder="Confirm Password"/>
+                    <div class="invalid-feedback errors alert alert-danger">
+                        <p
+                                th:each="err : ${#fields.errors('confirmPassword')}"
+                                th:text="${err}">
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-lg-3 col-form-label form-control-label"></label>
+                <div class="col-lg-9">
+                    <input type="reset" class="btn btn-secondary" value="Cancel"/>
+                    <input type="submit" class="btn btn-primary" value="Save Changes"/>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+</body>
+
+</html>

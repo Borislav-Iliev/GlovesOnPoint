@@ -1,14 +1,13 @@
 package bg.softuni.kickboxing.web;
 
+import bg.softuni.kickboxing.model.dto.user.EditUserDTO;
 import bg.softuni.kickboxing.model.dto.user.UserRegistrationDTO;
 import bg.softuni.kickboxing.service.UserService;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
@@ -26,6 +25,11 @@ public class UserController {
     @ModelAttribute("userRegistrationModel")
     public UserRegistrationDTO initUserRegistrationModel() {
         return new UserRegistrationDTO();
+    }
+
+    @ModelAttribute("editUserModel")
+    public EditUserDTO initEditUserModel() {
+        return new EditUserDTO();
     }
 
     @GetMapping("/register")
@@ -65,8 +69,34 @@ public class UserController {
         return "redirect:/users/login";
     }
 
-    @GetMapping("/profile")
-    public String profile() {
+    @GetMapping("/profile/{id}")
+    public String profile(@PathVariable("id") Long id, Model model) {
+        model.addAttribute("user", this.userService.getUserDTOById(id));
         return "profile";
+    }
+
+    @GetMapping("/profile/edit/{id}")
+    public String editProfile(@PathVariable("id") Long id, Model model) {
+        model.addAttribute("user", this.userService.getUserDTOById(id));
+        return "profile-edit";
+    }
+
+    @PostMapping("/profile/edit/{id}")
+    public String editProfile(@PathVariable("id") Long id,
+                              @Valid EditUserDTO editUserModel,
+                              BindingResult bindingResult,
+                              RedirectAttributes redirectAttributes) {
+
+        if (bindingResult.hasErrors()) {
+            redirectAttributes.addFlashAttribute("editUserModel", editUserModel);
+            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.editUserModel", bindingResult);
+
+            return "redirect:/users/profile/edit/{id}";
+        }
+
+        redirectAttributes.addFlashAttribute("success", "Your have successfully updated your profile!");
+        this.userService.editProfile(editUserModel, id);
+
+        return "redirect:/users/profile/edit/{id}";
     }
 }
