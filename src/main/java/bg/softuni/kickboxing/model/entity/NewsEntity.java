@@ -10,16 +10,15 @@ public class NewsEntity extends BaseEntity {
     @Column(nullable = false)
     private String title;
 
-    @Column(columnDefinition = "TEXT", nullable = false)
+    @Lob
     private String content;
 
     @Column(name = "created_on", nullable = false)
     private LocalDate createdOn;
 
-    @Column(columnDefinition = "INTEGER DEFAULT 0")
     public int views;
 
-    @Column(columnDefinition = "TEXT", nullable = false)
+    @Lob
     private String imageUrl;
 
     @ManyToOne(fetch = FetchType.EAGER)

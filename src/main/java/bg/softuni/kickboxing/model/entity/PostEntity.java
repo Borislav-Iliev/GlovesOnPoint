@@ -23,13 +23,12 @@ public class PostEntity extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private PostCategoryEnum category;
 
-    @Column(columnDefinition = "INTEGER DEFAULT 0", nullable = false)
     private int views;
 
     @Column(nullable = false)
     private LocalDateTime createdOn;
 
-    @Column(name = "is_approved", nullable = false, columnDefinition = "TINYINT(1) DEFAULT 0")
+    @Column(name = "is_approved", nullable = false)
     private boolean isApproved;
 
     @OneToMany(mappedBy = "post")

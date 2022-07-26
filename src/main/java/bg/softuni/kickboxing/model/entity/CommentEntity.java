@@ -10,7 +10,7 @@ public class CommentEntity extends BaseEntity {
     @Column(nullable = false)
     private String content;
 
-    @Column(name = "is_approved", nullable = false, columnDefinition = "TINYINT(1) DEFAULT 0")
+    @Column(name = "is_approved", nullable = false)
     private boolean isApproved;
 
     private LocalDateTime createdOn;

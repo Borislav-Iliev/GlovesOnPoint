@@ -19,32 +19,36 @@ public class UserDTO {
         return username;
     }
 
-    public void setUsername(String username) {
+    public UserDTO setUsername(String username) {
         this.username = username;
+        return this;
     }
 
     public String getEmail() {
         return email;
     }
 
-    public void setEmail(String email) {
+    public UserDTO setEmail(String email) {
         this.email = email;
+        return this;
     }
 
     public String getFirstName() {
         return firstName;
     }
 
-    public void setFirstName(String firstName) {
+    public UserDTO setFirstName(String firstName) {
         this.firstName = firstName;
+        return this;
     }
 
     public String getLastName() {
         return lastName;
     }
 
-    public void setLastName(String lastName) {
+    public UserDTO setLastName(String lastName) {
         this.lastName = lastName;
+        return this;
     }
 
     public String getImageUrl() {
@@ -54,8 +58,9 @@ public class UserDTO {
         return imageUrl;
     }
 
-    public void setImageUrl(String imageUrl) {
+    public UserDTO setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+        return this;
     }
 
     public String getFullName() {
@@ -66,7 +71,9 @@ public class UserDTO {
         return userRoles;
     }
 
-    public void setUserRoles(List<UserRoleEntity> userRoles) {
+    public UserDTO setUserRoles(List<UserRoleEntity> userRoles) {
         this.userRoles = userRoles;
+        return this;
     }
+
 }

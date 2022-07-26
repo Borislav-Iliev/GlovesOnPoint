@@ -20,10 +20,10 @@ public class WorkoutEntity extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private WorkoutTypeEnum type;
 
-    @Column(columnDefinition = "TEXT", nullable = false)
+    @Lob
     private String content;
 
-    @Column(columnDefinition = "TEXT", nullable = false)
+    @Lob
     private String imageUrl;
 
     @ManyToOne
