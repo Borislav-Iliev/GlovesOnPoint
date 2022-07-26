@@ -53,7 +53,7 @@ public class UserService {
 
     public void login(UserEntity userEntity) {
         UserDetails userDetails =
-                this.userDetailsService.loadUserByUsername(userEntity.getEmail());
+                this.userDetailsService.loadUserByUsername(userEntity.getUsername());
 
         Authentication auth =
                 new UsernamePasswordAuthenticationToken(

@@ -1,0 +1,18 @@
+spring:
+  jpa:
+    properties:
+      hibernate:
+        format_sql: 'TRUE'
+    hibernate:
+      ddl-auto: update
+    open-in-view: 'false'
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: 'true'
+
+mail:
+  host: "localhost"
+  port: 1025
+  username: "glovesonpoint@glovesonpoint.com"
+  password: ""

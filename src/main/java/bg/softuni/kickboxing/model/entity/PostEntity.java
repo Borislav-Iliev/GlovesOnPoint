@@ -47,63 +47,71 @@ public class PostEntity extends BaseEntity {
         return title;
     }
 
-    public void setTitle(String title) {
+    public PostEntity setTitle(String title) {
         this.title = title;
+        return this;
     }
 
     public String getContent() {
         return content;
     }
 
-    public void setContent(String content) {
+    public PostEntity setContent(String content) {
         this.content = content;
+        return this;
     }
 
     public PostCategoryEnum getCategory() {
         return category;
     }
 
-    public void setCategory(PostCategoryEnum category) {
+    public PostEntity setCategory(PostCategoryEnum category) {
         this.category = category;
+        return this;
     }
 
     public int getViews() {
         return views;
     }
 
-    public void setViews(int views) {
+    public PostEntity setViews(int views) {
         this.views = views;
+        return this;
     }
 
     public LocalDateTime getCreatedOn() {
         return createdOn;
     }
 
-    public void setCreatedOn(LocalDateTime createdOn) {
+    public PostEntity setCreatedOn(LocalDateTime createdOn) {
         this.createdOn = createdOn;
+        return this;
     }
 
     public boolean isApproved() {
         return isApproved;
     }
 
-    public void setApproved(boolean approved) {
+    public PostEntity setApproved(boolean approved) {
         isApproved = approved;
+        return this;
     }
 
     public List<CommentEntity> getComments() {
         return comments;
     }
 
-    public void setComments(List<CommentEntity> comments) {
+    public PostEntity setComments(List<CommentEntity> comments) {
         this.comments = comments;
+        return this;
     }
 
     public UserEntity getAuthor() {
         return author;
     }
 
-    public void setAuthor(UserEntity author) {
+    public PostEntity setAuthor(UserEntity author) {
         this.author = author;
+        return this;
     }
 }

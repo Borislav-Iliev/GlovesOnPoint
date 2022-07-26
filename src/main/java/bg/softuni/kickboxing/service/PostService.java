@@ -55,7 +55,9 @@ public class PostService {
     }
 
     public PostEntity findById(Long id) {
-        return this.postRepository.findById(id).orElseThrow();
+        return this.postRepository
+                .findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException(id));
     }
 
     public PostDetailsDTO getPostDetailsById(Long id) {

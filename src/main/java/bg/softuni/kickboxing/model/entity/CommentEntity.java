@@ -28,39 +28,44 @@ public class CommentEntity extends BaseEntity {
         return content;
     }
 
-    public void setContent(String content) {
+    public CommentEntity setContent(String content) {
         this.content = content;
+        return this;
     }
 
     public boolean isApproved() {
         return isApproved;
     }
 
-    public void setApproved(boolean approved) {
+    public CommentEntity setApproved(boolean approved) {
         isApproved = approved;
+        return this;
     }
 
     public LocalDateTime getCreatedOn() {
         return createdOn;
     }
 
-    public void setCreatedOn(LocalDateTime createdOn) {
+    public CommentEntity setCreatedOn(LocalDateTime createdOn) {
         this.createdOn = createdOn;
+        return this;
     }
 
     public PostEntity getPost() {
         return post;
     }
 
-    public void setPost(PostEntity post) {
+    public CommentEntity setPost(PostEntity post) {
         this.post = post;
+        return this;
     }
 
     public UserEntity getAuthor() {
         return author;
     }
 
-    public void setAuthor(UserEntity author) {
+    public CommentEntity setAuthor(UserEntity author) {
         this.author = author;
+        return this;
     }
 }
