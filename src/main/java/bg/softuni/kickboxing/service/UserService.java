@@ -71,7 +71,7 @@ public class UserService {
         return this.userRepository
                 .findByUsername(username)
                 .map(u -> this.mapper.map(u, UserDTO.class))
-                .orElseThrow();
+                .orElseThrow(() -> new UsernameNotFoundException(username));
     }
 
     public UserDTO getUserDTOById(String username) {

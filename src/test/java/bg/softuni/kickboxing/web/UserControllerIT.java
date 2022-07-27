@@ -1,46 +1,27 @@
 package bg.softuni.kickboxing.web;
 
-import bg.softuni.kickboxing.model.dto.user.UserDTO;
 import bg.softuni.kickboxing.model.entity.UserEntity;
 import bg.softuni.kickboxing.model.entity.UserRoleEntity;
-import bg.softuni.kickboxing.model.enums.UserRoleEnum;
 import bg.softuni.kickboxing.model.user.GlovesOnPointUserDetails;
 import bg.softuni.kickboxing.repository.UserRepository;
 import bg.softuni.kickboxing.repository.UserRoleRepository;
 import bg.softuni.kickboxing.service.EmailService;
-import bg.softuni.kickboxing.service.GlovesOnPointUserDetailsService;
-import bg.softuni.kickboxing.service.UserService;
-import org.aspectj.lang.annotation.After;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.Spy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.security.test.context.support.WithSecurityContext;
-import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 
-import java.security.Principal;
 import java.util.List;
-import java.util.Optional;
 
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -53,10 +34,10 @@ public class UserControllerIT {
     private MockMvc mockMvc;
 
     @Autowired
-    private UserRoleRepository userRoleRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    private UserRepository userRepository;
+    private UserRoleRepository userRoleRepository;
 
     @Autowired
     private UserDetailsService userDetailsService;
