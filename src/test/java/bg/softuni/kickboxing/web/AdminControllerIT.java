@@ -2,11 +2,9 @@ package bg.softuni.kickboxing.web;
 
 import bg.softuni.kickboxing.model.entity.UserEntity;
 import bg.softuni.kickboxing.model.entity.UserRoleEntity;
-import bg.softuni.kickboxing.model.exception.UsernameNotFoundException;
 import bg.softuni.kickboxing.repository.UserRepository;
 import bg.softuni.kickboxing.repository.UserRoleRepository;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
