@@ -74,9 +74,9 @@ public class UserService {
                 .orElseThrow();
     }
 
-    public UserDTO getUserDTOById(Long id) {
+    public UserDTO getUserDTOById(String username) {
         return this.userRepository
-                .findById(id)
+                .findByUsername(username)
                 .map(u -> this.mapper.map(u, UserDTO.class))
                 .orElseThrow();
     }
@@ -97,8 +97,8 @@ public class UserService {
         this.userRepository.save(user);
     }
 
-    public void editProfile(EditUserDTO editUserModel, Long id) {
-        UserEntity userEntity = this.userRepository.findById(id).orElseThrow();
+    public void editProfile(EditUserDTO editUserModel, String username) {
+        UserEntity userEntity = this.userRepository.findByUsername(username).orElseThrow();
 
         if (validateField(editUserModel.getUsername(), 2, 20)) {
             userEntity.setUsername(editUserModel.getUsername());

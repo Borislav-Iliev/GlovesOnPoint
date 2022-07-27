@@ -4,23 +4,36 @@ import bg.softuni.kickboxing.model.dto.user.UserDTO;
 import bg.softuni.kickboxing.model.entity.UserEntity;
 import bg.softuni.kickboxing.model.entity.UserRoleEntity;
 import bg.softuni.kickboxing.model.enums.UserRoleEnum;
+import bg.softuni.kickboxing.model.user.GlovesOnPointUserDetails;
 import bg.softuni.kickboxing.repository.UserRepository;
+import bg.softuni.kickboxing.repository.UserRoleRepository;
 import bg.softuni.kickboxing.service.EmailService;
+import bg.softuni.kickboxing.service.GlovesOnPointUserDetailsService;
+import bg.softuni.kickboxing.service.UserService;
+import org.aspectj.lang.annotation.After;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.Spy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.context.support.WithSecurityContext;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,21 +53,48 @@ public class UserControllerIT {
     private MockMvc mockMvc;
 
     @Autowired
-    private WebApplicationContext webApplicationContext;
+    private UserRoleRepository userRoleRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private UserDetailsService userDetailsService;
 
     @MockBean
     private EmailService mockEmailService;
 
-    @Mock
-    private UserRepository userRepository;
+    private UserEntity userEntity;
+
+    private GlovesOnPointUserDetails userDetails;
 
     @BeforeEach
     public void setUp() {
-        this.mockMvc = MockMvcBuilders
-                .webAppContextSetup(this.webApplicationContext)
-                .apply(springSecurity())
-                .build();
-        initUser();
+        this.userEntity = initUser(this.userRoleRepository.findAll());
+        this.userDetails = (GlovesOnPointUserDetails)
+                this.userDetailsService.loadUserByUsername("TestUsername");
+    }
+
+    @AfterEach
+    public void tearDown() {
+        this.userRepository.deleteAll();
+        this.userRoleRepository.deleteAll();
+    }
+
+    public UserEntity initUser(List<UserRoleEntity> userRoles) {
+        UserEntity testUserEntity = new UserEntity()
+                .setUsername("TestUsername")
+                .setFirstName("Test")
+                .setLastName("Test")
+                .setEmail("test@example.com")
+                .setPassword("testPassword")
+                .setAge(20)
+                .setImageUrl("image:/url")
+                .setUserRoles(userRoles);
+        testUserEntity.setId(1L);
+
+        this.userRepository.save(testUserEntity);
+        return testUserEntity;
     }
 
     @Test
@@ -69,7 +109,7 @@ public class UserControllerIT {
         this.mockMvc.perform(post("/users/register")
                         .param("firstName", "Test")
                         .param("lastName", "Testov")
-                        .param("username", "TestUsername")
+                        .param("username", "TestUsername1")
                         .param("email", "email@example.com")
                         .param("age", "20")
                         .param("imageUrl", "image:/url")
@@ -120,5 +160,80 @@ public class UserControllerIT {
         this.mockMvc.perform(get("/users/profile/edit/{id}", 1L))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("http://localhost/users/login"));
+    }
+
+    @Test
+    public void profilePageOpenFromUnauthenticatedUserShouldRedirectToLoginPage() throws Exception {
+        this.mockMvc
+                .perform(get("/users/profile"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("http://localhost/users/login"));
+    }
+
+    @Test
+    @WithMockUser(username = "TestUsername", roles = {"ADMIN", "MODERATOR", "USERNAME"})
+    public void profilePageOpenFromAuthenticatedUser() throws Exception {
+        this.mockMvc
+                .perform(get("/users/profile"))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("user"))
+                .andExpect(view().name("profile"));
+    }
+
+    @Test
+    @WithMockUser(username = "TestUsername", roles = {"ADMIN", "MODERATOR", "USERNAME"})
+    public void editProfilePageOpenFromAuthenticatedUser() throws Exception {
+        this.mockMvc
+                .perform(get("/users/profile/edit"))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("user"))
+                .andExpect(view().name("profile-edit"));
+    }
+
+    @Test
+    @WithMockUser(username = "TestUsername", roles = {"ADMIN", "MODERATOR", "USERNAME"})
+    public void testEditProfilePage_InvalidData() throws Exception {
+        this.mockMvc
+                .perform(post("/users/profile/edit")
+                        .param("username", "TestUsername12")
+                        .param("email", "example2@example.com")
+                        .param("firstName", "TestFirst")
+                        .param("lastName", "TestLast")
+                        .param("imageUrl", "image:/https")
+                        .param("password", "TestPassword")
+                        .param("confirmPassword", "TestPassword")
+                        .with(csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(flash().attributeExists("editUserModel", "org.springframework.validation.BindingResult.editUserModel"))
+                .andExpect(redirectedUrl("/users/profile/edit"));
+    }
+
+    @Test
+    @WithMockUser(username = "TestUsername", roles = {"ADMIN", "MODERATOR", "USERNAME"})
+    public void testEditProfilePage_ValidData() throws Exception {
+        this.mockMvc
+                .perform(post("/users/profile/edit")
+                        .param("username", "TestUsername12")
+                        .param("email", "example2@example.com")
+                        .param("firstName", "TestFirst")
+                        .param("lastName", "TestLast")
+                        .param("imageUrl", "https://www.example.com")
+                        .param("password", "TestPassword")
+                        .param("confirmPassword", "TestPassword")
+                        .with(csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(flash().attributeExists("success"))
+                .andExpect(redirectedUrl("/users/profile/edit"));
+    }
+
+    @Test
+    @WithMockUser(username = "TestUsername", password = "testPassword", roles = {"ADMIN", "MODERATOR", "USERNAME"})
+    public void testLoginErrorPageShown() throws Exception {
+        this.mockMvc
+                .perform(post("/users/login-error")
+                        .with(csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(flash().attributeExists("badCredentials", "username"))
+                .andExpect(redirectedUrl("/users/login"));
     }
 }

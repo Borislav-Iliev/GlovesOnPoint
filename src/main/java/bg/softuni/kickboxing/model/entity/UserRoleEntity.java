@@ -23,7 +23,13 @@ public class UserRoleEntity extends BaseEntity {
         return userRole;
     }
 
-    public void setUserRole(UserRoleEnum userRole) {
+    public UserRoleEntity setUserRole(UserRoleEnum userRole) {
         this.userRole = userRole;
+        return this;
+    }
+
+    @Override
+    public String toString() {
+        return userRole.name();
     }
 }

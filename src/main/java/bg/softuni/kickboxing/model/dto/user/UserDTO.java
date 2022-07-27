@@ -1,18 +1,32 @@
 package bg.softuni.kickboxing.model.dto.user;
 
+import bg.softuni.kickboxing.model.entity.CommentEntity;
+import bg.softuni.kickboxing.model.entity.PostEntity;
 import bg.softuni.kickboxing.model.entity.UserRoleEntity;
 
 import java.util.List;
 
 public class UserDTO {
+    private Long id;
     private String username;
     private String email;
     private String firstName;
     private String lastName;
     private String imageUrl;
     private List<UserRoleEntity> userRoles;
+    private List<PostEntity> posts;
+    private List<CommentEntity> comments;
 
     public UserDTO() {
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public UserDTO setId(Long id) {
+        this.id = id;
+        return this;
     }
 
     public String getUsername() {
@@ -76,4 +90,25 @@ public class UserDTO {
         return this;
     }
 
+    public String getRole() {
+        return this.userRoles.toArray()[this.userRoles.size() - 1].toString();
+    }
+
+    public List<PostEntity> getPosts() {
+        return posts;
+    }
+
+    public UserDTO setPosts(List<PostEntity> posts) {
+        this.posts = posts;
+        return this;
+    }
+
+    public List<CommentEntity> getComments() {
+        return comments;
+    }
+
+    public UserDTO setComments(List<CommentEntity> comments) {
+        this.comments = comments;
+        return this;
+    }
 }
