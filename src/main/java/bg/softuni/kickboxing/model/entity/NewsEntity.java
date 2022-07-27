@@ -31,47 +31,53 @@ public class NewsEntity extends BaseEntity {
         return title;
     }
 
-    public void setTitle(String title) {
+    public NewsEntity setTitle(String title) {
         this.title = title;
+        return this;
     }
 
     public String getContent() {
         return content;
     }
 
-    public void setContent(String content) {
+    public NewsEntity setContent(String content) {
         this.content = content;
+        return this;
     }
 
     public LocalDate getCreatedOn() {
         return createdOn;
     }
 
-    public void setCreatedOn(LocalDate date) {
-        this.createdOn = date;
+    public NewsEntity setCreatedOn(LocalDate createdOn) {
+        this.createdOn = createdOn;
+        return this;
     }
 
     public int getViews() {
         return views;
     }
 
-    public void setViews(int views) {
+    public NewsEntity setViews(int views) {
         this.views = views;
+        return this;
     }
 
     public String getImageUrl() {
         return imageUrl;
     }
 
-    public void setImageUrl(String imageUrl) {
+    public NewsEntity setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+        return this;
     }
 
     public UserEntity getAuthor() {
         return author;
     }
 
-    public void setAuthor(UserEntity author) {
+    public NewsEntity setAuthor(UserEntity author) {
         this.author = author;
+        return this;
     }
 }

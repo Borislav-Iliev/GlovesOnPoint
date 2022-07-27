@@ -2,7 +2,6 @@ package bg.softuni.kickboxing.web;
 
 import bg.softuni.kickboxing.model.dto.post.AddPostDTO;
 import bg.softuni.kickboxing.model.user.GlovesOnPointUserDetails;
-import bg.softuni.kickboxing.service.CommentService;
 import bg.softuni.kickboxing.service.PostService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -20,11 +19,9 @@ import javax.validation.Valid;
 public class ForumController {
 
     private final PostService postService;
-    private final CommentService commentService;
 
-    public ForumController(PostService postService, CommentService commentService) {
+    public ForumController(PostService postService) {
         this.postService = postService;
-        this.commentService = commentService;
     }
 
     @ModelAttribute("addPostModel")

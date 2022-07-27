@@ -36,47 +36,53 @@ public class WorkoutEntity extends BaseEntity {
         return title;
     }
 
-    public void setTitle(String title) {
+    public WorkoutEntity setTitle(String title) {
         this.title = title;
+        return this;
     }
 
     public WorkoutLevelEnum getLevel() {
         return level;
     }
 
-    public void setLevel(WorkoutLevelEnum level) {
+    public WorkoutEntity setLevel(WorkoutLevelEnum level) {
         this.level = level;
+        return this;
     }
 
     public WorkoutTypeEnum getType() {
         return type;
     }
 
-    public void setType(WorkoutTypeEnum type) {
+    public WorkoutEntity setType(WorkoutTypeEnum type) {
         this.type = type;
+        return this;
     }
 
     public String getContent() {
         return content;
     }
 
-    public void setContent(String content) {
+    public WorkoutEntity setContent(String content) {
         this.content = content;
+        return this;
     }
 
     public String getImageUrl() {
         return imageUrl;
     }
 
-    public void setImageUrl(String imageUrl) {
+    public WorkoutEntity setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+        return this;
     }
 
     public UserEntity getAuthor() {
         return author;
     }
 
-    public void setAuthor(UserEntity author) {
+    public WorkoutEntity setAuthor(UserEntity author) {
         this.author = author;
+        return this;
     }
 }

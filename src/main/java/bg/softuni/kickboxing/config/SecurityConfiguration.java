@@ -26,7 +26,8 @@ public class SecurityConfiguration {
                 .authorizeRequests()
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                 .antMatchers("/", "/users/login", "/users/register").permitAll()
-                .antMatchers("/moderator", "/moderator/posts", "/moderator/comments").hasRole("MODERATOR")
+                .antMatchers("/moderator", "/moderator/posts", "/moderator/comments", "/news/delete/{id}",
+                        "/news/add", "/workouts/delete/{id}", "/workouts/add").hasRole("MODERATOR")
                 .antMatchers("/admin/moderators").hasRole("ADMIN")
                 .anyRequest()
                 .authenticated()

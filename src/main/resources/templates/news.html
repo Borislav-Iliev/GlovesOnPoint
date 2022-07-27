@@ -65,7 +65,7 @@
                  th:each="t : ${trending}">
 
                 <div class="col-6 col-md-4 col-lg-4 col-sm-12">
-                    <img height="175px" class="card-image-top d-block w-100" th:src="@{${t.imageUrl}}"
+                    <img height="175px" class="card-image-top d-block w-100" th:src="${t.imageUrl}"
                          alt="News Picture">
                 </div>
 

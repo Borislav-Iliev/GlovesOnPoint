@@ -152,7 +152,7 @@ public class UserControllerIT {
     }
 
     @Test
-    @WithMockUser(username = "TestUsername", roles = {"ADMIN", "MODERATOR", "USERNAME"})
+    @WithMockUser(username = "TestUsername", roles = "USER")
     public void profilePageOpenFromAuthenticatedUser() throws Exception {
         this.mockMvc
                 .perform(get("/users/profile"))
@@ -162,7 +162,7 @@ public class UserControllerIT {
     }
 
     @Test
-    @WithMockUser(username = "TestUsername", roles = {"ADMIN", "MODERATOR", "USERNAME"})
+    @WithMockUser(username = "TestUsername", roles = "USER")
     public void editProfilePageOpenFromAuthenticatedUser() throws Exception {
         this.mockMvc
                 .perform(get("/users/profile/edit"))
@@ -172,7 +172,7 @@ public class UserControllerIT {
     }
 
     @Test
-    @WithMockUser(username = "TestUsername", roles = {"ADMIN", "MODERATOR", "USERNAME"})
+    @WithMockUser(username = "TestUsername", roles = "USER")
     public void testEditProfilePage_InvalidData() throws Exception {
         this.mockMvc
                 .perform(post("/users/profile/edit")
@@ -190,7 +190,7 @@ public class UserControllerIT {
     }
 
     @Test
-    @WithMockUser(username = "TestUsername", roles = {"ADMIN", "MODERATOR", "USERNAME"})
+    @WithMockUser(username = "TestUsername", roles = "USER")
     public void testEditProfilePage_ValidData() throws Exception {
         this.mockMvc
                 .perform(post("/users/profile/edit")
@@ -208,7 +208,7 @@ public class UserControllerIT {
     }
 
     @Test
-    @WithMockUser(username = "TestUsername", password = "testPassword", roles = {"ADMIN", "MODERATOR", "USERNAME"})
+    @WithMockUser(username = "TestUsername", roles = "USER")
     public void testLoginErrorPageShown() throws Exception {
         this.mockMvc
                 .perform(post("/users/login-error")

@@ -72,7 +72,7 @@ public class WorkoutController {
     }
 
     @PostMapping("/add")
-    public String register(@Valid AddWorkoutDTO addWorkoutModel,
+    public String addWorkout(@Valid AddWorkoutDTO addWorkoutModel,
                            BindingResult bindingResult,
                            RedirectAttributes redirectAttributes,
                            @AuthenticationPrincipal UserDetails userDetails) {
