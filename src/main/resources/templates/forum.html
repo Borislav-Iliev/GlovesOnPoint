@@ -16,12 +16,18 @@
 
     <div class="row">
         <div class="col">
-            <h3 class="text-white">Search by text:</h3>
-            <input
-                    id="search"
-                    class="form-control w-50"
-                    type="search"
-                    placeholder="Search...">
+            <h3 class="text-white">Search by title:</h3>
+            <form
+                    th:object="${searchPostModel}"
+                    th:action="@{/forum/search/{query}(query = *{query})}"
+                    th:method="GET">
+                <input
+                        id="search"
+                        class="form-control w-50"
+                        th:field="*{query}"
+                        type="search"
+                        placeholder="Search...">
+            </form>
         </div>
         <div class="col d-flex justify-content-center">
             <a th:href="@{/forum/posts/add}">
@@ -33,6 +39,7 @@
             <select
                     id="postCategory"
                     name="postCategory"
+                    onchange="location = '/forum/category/' + this.value.toLowerCase()"
                     class="form-control w-50 float-right">
                 <option value="">- Select Category -</option>
                 <option th:each="c : ${T (bg.softuni.kickboxing.model.enums.PostCategoryEnum).values()}"

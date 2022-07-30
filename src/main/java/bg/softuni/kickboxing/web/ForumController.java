@@ -1,6 +1,8 @@
 package bg.softuni.kickboxing.web;
 
 import bg.softuni.kickboxing.model.dto.post.AddPostDTO;
+import bg.softuni.kickboxing.model.dto.post.SearchPostDTO;
+import bg.softuni.kickboxing.model.enums.PostCategoryEnum;
 import bg.softuni.kickboxing.model.user.GlovesOnPointUserDetails;
 import bg.softuni.kickboxing.service.PostService;
 import org.springframework.data.domain.Pageable;
@@ -29,10 +31,37 @@ public class ForumController {
         return new AddPostDTO();
     }
 
+    @ModelAttribute("searchPostModel")
+    public SearchPostDTO initSearchPostModel() {
+        return new SearchPostDTO();
+    }
+
     @GetMapping("")
     public String forum(Model model,
                         @PageableDefault(size = 9) Pageable pageable) {
         model.addAttribute("posts", this.postService.getAllApprovedPostsOrderedByDateDesc(pageable));
+        return "forum";
+    }
+
+    @GetMapping("/category/{category}")
+    public String postsByCategory(Model model,
+                                  @PathVariable("category") String category,
+                                  @PageableDefault(size = 9) Pageable pageable) {
+
+        model.addAttribute("posts", this.postService.getAllApprovedPostsByCategoryOrderedByCreatedOnDesc(pageable, category));
+        return "forum";
+    }
+
+    @GetMapping("/search")
+    public String search(Model model,
+                         @Valid SearchPostDTO searchPostModel,
+                         @RequestParam("query") String query,
+                         @PageableDefault(size = 9) Pageable pageable) {
+
+        if (!searchPostModel.isEmpty()) {
+            model.addAttribute("posts", this.postService.getAllApprovedPostsWhereTitleLike(pageable, query));
+        }
+
         return "forum";
     }
 

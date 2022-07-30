@@ -5,6 +5,7 @@ import bg.softuni.kickboxing.model.dto.post.PostDTO;
 import bg.softuni.kickboxing.model.dto.post.PostDetailsDTO;
 import bg.softuni.kickboxing.model.entity.PostEntity;
 import bg.softuni.kickboxing.model.entity.UserEntity;
+import bg.softuni.kickboxing.model.enums.PostCategoryEnum;
 import bg.softuni.kickboxing.model.exception.ObjectNotFoundException;
 import bg.softuni.kickboxing.model.user.GlovesOnPointUserDetails;
 import bg.softuni.kickboxing.repository.PostRepository;
@@ -48,6 +49,14 @@ public class PostService {
 
     public Page<PostDTO> getAllApprovedPostsOrderedByDateDesc(Pageable pageable) {
         return this.postRepository.getAllApprovedPostsOrderedByCreatedOnDesc(pageable);
+    }
+
+    public Page<PostDTO> getAllApprovedPostsByCategoryOrderedByCreatedOnDesc(Pageable pageable, String category) {
+        return this.postRepository.getAllApprovedPostsByCategoryOrderedByCreatedOnDesc(pageable, PostCategoryEnum.valueOf(category.toUpperCase()));
+    }
+
+    public Page<PostDTO> getAllApprovedPostsWhereTitleLike(Pageable pageable, String query) {
+        return this.postRepository.getAllApprovedPostsWhereTitleLike(pageable, query);
     }
 
     public Page<PostDTO> getAllNotApprovedPostsOrderedByDateDesc(Pageable pageable) {
