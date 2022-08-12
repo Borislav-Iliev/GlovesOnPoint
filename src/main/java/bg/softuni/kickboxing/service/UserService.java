@@ -1,6 +1,7 @@
 package bg.softuni.kickboxing.service;
 
 import bg.softuni.kickboxing.model.dto.user.EditUserDTO;
+import bg.softuni.kickboxing.model.dto.user.TopUserDTO;
 import bg.softuni.kickboxing.model.dto.user.UserDTO;
 import bg.softuni.kickboxing.model.dto.user.UserRegistrationDTO;
 import bg.softuni.kickboxing.model.entity.UserEntity;
@@ -17,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -79,6 +81,14 @@ public class UserService {
                 .findByUsername(username)
                 .map(u -> this.mapper.map(u, UserDTO.class))
                 .orElseThrow();
+    }
+
+    public List<TopUserDTO> getTopProfiles() {
+        return this.userRepository
+                .getAllDistinctByOrderByPostsDesc()
+                .stream()
+                .limit(5)
+                .collect(Collectors.toList());
     }
 
     public void makeModerator(String username) {
