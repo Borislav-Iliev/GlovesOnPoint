@@ -12,6 +12,7 @@ import bg.softuni.kickboxing.model.exception.ObjectNotFoundException;
 import bg.softuni.kickboxing.model.user.GlovesOnPointUserDetails;
 import bg.softuni.kickboxing.repository.UserRepository;
 import bg.softuni.kickboxing.repository.WorkoutRepository;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.function.Executable;
@@ -52,11 +53,25 @@ public class WorkoutServiceTest {
     @Mock
     private GlovesOnPointUserDetails userDetails;
 
+    static List<WorkoutDTO> workouts;
+    static Page<WorkoutDTO> expectedWorkoutsPage;
+
+    static WorkoutEntity workout;
+    static WorkoutDTO workoutDto;
+    static AddWorkoutDTO addWorkoutDto;
+    static UserEntity user;
+    @BeforeAll
+    static void setUp() {
+        workouts = List.of(initWorkoutDto(), initWorkoutDto());
+        expectedWorkoutsPage = new PageImpl<>(workouts);
+        workout = initWorkout();
+        workoutDto = initWorkoutDto();
+        addWorkoutDto = initAddWorkoutDto();
+        user = initUser();
+    }
+
     @Test
     void testGetAllWorkoutsOrderedByWorkoutLevel_ShouldReturnCorrectPageOfWorkouts() {
-        List<WorkoutDTO> workouts = List.of(initWorkoutDto(), initWorkoutDto());
-        Page<WorkoutDTO> expectedWorkoutsPage = new PageImpl<>(workouts);
-
         when(this.workoutRepository.findAllWorkoutsOrderedByWorkoutLevel(this.pageable))
                 .thenReturn(expectedWorkoutsPage);
 
@@ -68,9 +83,6 @@ public class WorkoutServiceTest {
 
     @Test
     void testGetAllWorkoutsByLevel_ShouldReturnCorrectPageOfWorkouts() {
-        List<WorkoutDTO> workouts = List.of(initWorkoutDto(), initWorkoutDto());
-        Page<WorkoutDTO> expectedWorkoutsPage = new PageImpl<>(workouts);
-
         when(this.workoutRepository.findAllByLevel(WorkoutLevelEnum.EASY, this.pageable))
                 .thenReturn(expectedWorkoutsPage);
 
@@ -82,12 +94,9 @@ public class WorkoutServiceTest {
 
     @Test
     void testAddWorkout_ShouldAddWorkout_WhenValidDataIsPassed() {
-        WorkoutEntity workout = initWorkout();
-        AddWorkoutDTO addWorkoutDto = initAddWorkoutDto();
         when(this.mapper.map(addWorkoutDto, WorkoutEntity.class))
                 .thenReturn(workout);
 
-        UserEntity user = initUser();
         when(this.userDetails.getUsername())
                 .thenReturn("Username");
         when(this.userRepository.findByUsername(this.userDetails.getUsername()))
@@ -101,7 +110,6 @@ public class WorkoutServiceTest {
     @ParameterizedTest
     @CsvSource(value = {"1", "2", "3", "4"})
     void testDeleteWorkout_ShouldDeleteWorkout_WhenValidWorkoutIdIsPassed(Long id) {
-        WorkoutEntity workout = initWorkout();
         workout.setId(9L);
         when(this.workoutRepository.findTopByOrderByIdDesc())
                 .thenReturn(workout);
@@ -114,7 +122,6 @@ public class WorkoutServiceTest {
     @ParameterizedTest
     @CsvSource(value = {"2", "3", "4"})
     void testDeleteWorkout_ShouldThrowException_WhenInvalidWorkoutIdIsPassed(Long id) {
-        WorkoutEntity workout = initWorkout();
         workout.setId(1L);
         when(this.workoutRepository.findTopByOrderByIdDesc())
                 .thenReturn(workout);
@@ -126,7 +133,6 @@ public class WorkoutServiceTest {
 
     @Test
     void testGetIdOfLastObjectInTable_ShouldReturnValidIdOfLastObject() {
-        WorkoutEntity workout = initWorkout();
         workout.setId(1L);
         when(this.workoutRepository.findTopByOrderByIdDesc())
                 .thenReturn(workout);
@@ -139,11 +145,9 @@ public class WorkoutServiceTest {
     @ParameterizedTest
     @CsvSource(value = {"1", "2", "3", "4"})
     void testGetWorkoutById_ShouldReturnCorrectWorkout_WhenValidWorkoutIdIsPassed(Long id) {
-        WorkoutEntity workout = initWorkout();
         when(this.workoutRepository.findById(id))
                 .thenReturn(Optional.of(workout));
 
-        WorkoutDTO workoutDto = initWorkoutDto();
         when(this.mapper.map(workout, WorkoutDTO.class))
                 .thenReturn(workoutDto);
 
@@ -165,7 +169,7 @@ public class WorkoutServiceTest {
         assertThrows(ObjectNotFoundException.class, executable);
     }
 
-    private WorkoutEntity initWorkout() {
+    private static WorkoutEntity initWorkout() {
         return new WorkoutEntity()
                 .setTitle("Title")
                 .setLevel(WorkoutLevelEnum.EASY)
@@ -175,7 +179,7 @@ public class WorkoutServiceTest {
                 .setAuthor(initUser());
     }
 
-    private UserEntity initUser() {
+    private static UserEntity initUser() {
         return new UserEntity()
                 .setUsername("TestUsername")
                 .setFirstName("Test")
@@ -189,13 +193,13 @@ public class WorkoutServiceTest {
                         new UserRoleEntity(UserRoleEnum.USER)));
     }
 
-    private WorkoutDTO initWorkoutDto() {
+    private static WorkoutDTO initWorkoutDto() {
         return new WorkoutDTO(
                 1L, "Title", WorkoutLevelEnum.EASY, WorkoutTypeEnum.CARDIO, "Content", "image:/url"
         );
     }
 
-    public AddWorkoutDTO initAddWorkoutDto() {
+    public static AddWorkoutDTO initAddWorkoutDto() {
         AddWorkoutDTO addWorkoutDto = new AddWorkoutDTO();
         addWorkoutDto.setTitle("Title");
         addWorkoutDto.setLevel(WorkoutLevelEnum.EASY);
