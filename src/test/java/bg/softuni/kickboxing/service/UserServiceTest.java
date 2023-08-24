@@ -13,6 +13,7 @@ import bg.softuni.kickboxing.model.enums.UserRoleEnum;
 import bg.softuni.kickboxing.model.exception.UsernameNotFoundException;
 import bg.softuni.kickboxing.model.user.GlovesOnPointUserDetails;
 import bg.softuni.kickboxing.repository.UserRepository;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.function.Executable;
@@ -62,15 +63,24 @@ public class UserServiceTest {
     @Mock
     private GlovesOnPointUserDetails userDetails;
 
+    static UserEntity user;
+    static UserRegistrationDTO userRegistrationDto;
+    static UserDTO userDto;
+
+    @BeforeAll
+    static void setUp() {
+        user = initUser();
+        userRegistrationDto = initUserRegistrationDto();
+        userDto = initUserDto();
+    }
+
     @Test
     void testRegisterAndLogin_ShouldRegisterAndLoginTheUser() {
-        UserRegistrationDTO userRegistrationDTO = initUserRegistrationDto();
-        UserEntity user = initUser();
-        when(this.mapper.map(userRegistrationDTO, UserEntity.class))
+        when(this.mapper.map(userRegistrationDto, UserEntity.class))
                 .thenReturn(user);
 
-        when(this.passwordEncoder.encode(userRegistrationDTO.getPassword()))
-                .thenReturn(userRegistrationDTO.getPassword());
+        when(this.passwordEncoder.encode(userRegistrationDto.getPassword()))
+                .thenReturn(userRegistrationDto.getPassword());
 
         UserRoleEntity userRole = initUserRole();
         when(this.userRoleService.getUserRole())
@@ -79,7 +89,7 @@ public class UserServiceTest {
         when(this.userDetailsService.loadUserByUsername(user.getUsername()))
                 .thenReturn(this.userDetails);
 
-        this.userService.registerAndLogin(userRegistrationDTO);
+        this.userService.registerAndLogin(userRegistrationDto);
 
         verify(this.userRepository, times(1)).save(user);
         verify(this.emailService, times(1))
@@ -90,11 +100,9 @@ public class UserServiceTest {
     @ParameterizedTest
     @CsvSource(value = {"Username", "Test", "TestUsername"})
     void testGetUserDTOByUsername_ShouldReturnCorrectUserDto_WhenValidUsernameIsPassed(String username) {
-        UserEntity user = initUser();
         when(this.userRepository.findByUsername(username))
                 .thenReturn(Optional.of(user));
 
-        UserDTO userDto = initUserDto();
         when(this.mapper.map(user, UserDTO.class))
                 .thenReturn(userDto);
 
@@ -121,11 +129,9 @@ public class UserServiceTest {
 
     @Test
     void testGetUserDTOById_ShouldReturnCorrectUserDto_WhenValidUserIdIsPassed() {
-        UserEntity user = initUser();
         when(this.userRepository.findByUsername("Username"))
                 .thenReturn(Optional.of(user));
 
-        UserDTO userDto = initUserDto();
         when(this.mapper.map(user, UserDTO.class))
                 .thenReturn(userDto);
 
@@ -167,7 +173,7 @@ public class UserServiceTest {
     @ParameterizedTest
     @CsvSource(value = {"Username", "Test", "TestUsername"})
     void testMakeModerator_ShouldAddModeratorRoleToUser_WhenValidUsernameIsPassed(String username) {
-        UserEntity user = initNormalUser();
+        user = initNormalUser();
         when(this.userRepository.findByUsername(username))
                 .thenReturn(Optional.of(user));
 
@@ -195,17 +201,17 @@ public class UserServiceTest {
     @ParameterizedTest
     @CsvSource(value = {"Username", "Test", "TestUsername"})
     void testRemoveModerator_ShouldRemoveModeratorRole_WhenValidUsernameIsPassed(String username) {
-        UserEntity moderator = initModerator();
+        user = initModerator();
         when(this.userRepository.findByUsername(username))
-                .thenReturn(Optional.of(moderator));
+                .thenReturn(Optional.of(user));
 
         this.userService.removeModerator(username);
 
         String expectedRoles = "USER";
-        String actualRoles = moderator.getUserRoles().stream().map(r -> r.getUserRole().name()).collect(Collectors.joining(", "));
+        String actualRoles = user.getUserRoles().stream().map(r -> r.getUserRole().name()).collect(Collectors.joining(", "));
 
         assertEquals(expectedRoles, actualRoles);
-        verify(this.userRepository, times(1)).save(moderator);
+        verify(this.userRepository, times(1)).save(user);
     }
 
     @ParameterizedTest
@@ -219,7 +225,6 @@ public class UserServiceTest {
     @ParameterizedTest
     @CsvSource(value = {"Username", "Test", "TestUsername"})
     void testEditProfile_ShouldEditProfile_WhenValidUsernameIsPassed(String username) {
-        UserEntity user = initUser();
         when(this.userRepository.findByUsername(username))
                 .thenReturn(Optional.of(user));
 
@@ -240,7 +245,6 @@ public class UserServiceTest {
     @ParameterizedTest
     @CsvSource(value = {"Username", "Test", "TestUsername"})
     void testEditProfile_ShouldSkipField_WhenFieldIsNotValid(String username) {
-        UserEntity user = initUser();
         when(this.userRepository.findByUsername(username))
                 .thenReturn(Optional.of(user));
 
@@ -271,7 +275,7 @@ public class UserServiceTest {
         assertThrows(RuntimeException.class, executable);
     }
 
-    private UserEntity initUser() {
+    private static UserEntity initUser() {
         return new UserEntity()
                 .setUsername("TestUsername")
                 .setFirstName("Test")
@@ -314,7 +318,7 @@ public class UserServiceTest {
                 .setUserRoles(roles);
     }
 
-    private UserRegistrationDTO initUserRegistrationDto() {
+    private static UserRegistrationDTO initUserRegistrationDto() {
         UserRegistrationDTO userRegistrationDTO = new UserRegistrationDTO();
         userRegistrationDTO.setUsername("Username");
         userRegistrationDTO.setFirstName("FirstName");
@@ -327,14 +331,14 @@ public class UserServiceTest {
         return userRegistrationDTO;
     }
 
-    private UserDTO initUserDto() {
+    private static UserDTO initUserDto() {
         return new UserDTO()
                 .setId(1L).setUsername("Username").setEmail("email@example.com").setFirstName("FirstName")
                 .setLastName("LastName").setImageUrl("image:/url").setUserRoles(List.of(new UserRoleEntity(UserRoleEnum.USER)))
                 .setPosts(List.of(initPost())).setComments(List.of(initComment()));
     }
 
-    private PostEntity initPost() {
+    private static PostEntity initPost() {
         return new PostEntity()
                 .setTitle("Title")
                 .setContent("Content")
@@ -346,7 +350,7 @@ public class UserServiceTest {
                 .setAuthor(null);
     }
 
-    private CommentEntity initComment() {
+    private static CommentEntity initComment() {
         return new CommentEntity()
                 .setContent("Content")
                 .setApproved(false)
