@@ -56,10 +56,10 @@ public class WorkoutServiceTest {
     static List<WorkoutDTO> workouts;
     static Page<WorkoutDTO> expectedWorkoutsPage;
 
-    static WorkoutEntity workout;
-    static WorkoutDTO workoutDto;
-    static AddWorkoutDTO addWorkoutDto;
-    static UserEntity user;
+    private static WorkoutEntity workout;
+    private static WorkoutDTO workoutDto;
+    private static AddWorkoutDTO addWorkoutDto;
+    private static UserEntity user;
     @BeforeAll
     static void setUp() {
         workouts = List.of(initWorkoutDto(), initWorkoutDto());
