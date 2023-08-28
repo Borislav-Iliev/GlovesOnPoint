@@ -3,6 +3,7 @@ package bg.softuni.kickboxing.service;
 import bg.softuni.kickboxing.model.entity.UserRoleEntity;
 import bg.softuni.kickboxing.model.enums.UserRoleEnum;
 import bg.softuni.kickboxing.repository.UserRoleRepository;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -11,6 +12,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
@@ -22,6 +24,15 @@ public class UserRoleServiceTest {
 
     @Mock
     private UserRoleRepository userRoleRepository;
+
+    private static UserRoleEntity userRole;
+    private static UserRoleEntity moderatorRole;
+
+    @BeforeAll
+    static void setUp() {
+        userRole = initUserRole();
+        moderatorRole = initModeratorRole();
+    }
 
     @Test
     void testSeedRoles_ShouldAddRoles_WhenRoleCountIsZero() {
@@ -45,35 +56,35 @@ public class UserRoleServiceTest {
 
     @Test
     void testGetUserRole_ShouldReturnUserRole() {
-        UserRoleEntity expectedUserRole = initUserRole();
-
         when(this.userRoleRepository.findByUserRole(UserRoleEnum.USER))
-                .thenReturn(Optional.of(expectedUserRole));
+                .thenReturn(Optional.of(userRole));
 
         UserRoleEntity actualUserRole = this.userRoleService.getUserRole();
 
-        assertEquals(expectedUserRole.getId(), actualUserRole.getId());
-        assertEquals(expectedUserRole.getUserRole(), actualUserRole.getUserRole());
+        assertAll(
+                () -> assertEquals(userRole.getId(), actualUserRole.getId()),
+                () -> assertEquals(userRole.getUserRole(), actualUserRole.getUserRole())
+        );
     }
 
     @Test
     void testGetModeratorRole_ShouldReturnModeratorRole() {
-        UserRoleEntity expectedUserRole = initModeratorRole();
-
         when(this.userRoleRepository.findByUserRole(UserRoleEnum.MODERATOR))
-                .thenReturn(Optional.of(expectedUserRole));
+                .thenReturn(Optional.of(moderatorRole));
 
         UserRoleEntity actualUserRole = this.userRoleService.getModeratorRole();
 
-        assertEquals(expectedUserRole.getId(), actualUserRole.getId());
-        assertEquals(expectedUserRole.getUserRole(), actualUserRole.getUserRole());
+        assertAll(
+                () -> assertEquals(moderatorRole.getId(), actualUserRole.getId()),
+                () -> assertEquals(moderatorRole.getUserRole(), actualUserRole.getUserRole())
+        );
     }
 
-    private UserRoleEntity initUserRole() {
+    private static UserRoleEntity initUserRole() {
         return new UserRoleEntity(UserRoleEnum.USER);
     }
 
-    private UserRoleEntity initModeratorRole() {
+    private static UserRoleEntity initModeratorRole() {
         return new UserRoleEntity(UserRoleEnum.MODERATOR);
     }
 }

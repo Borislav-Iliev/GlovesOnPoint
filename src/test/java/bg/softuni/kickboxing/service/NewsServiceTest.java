@@ -1,6 +1,5 @@
 package bg.softuni.kickboxing.service;
 
-import bg.softuni.kickboxing.model.dto.comment.CommentDTO;
 import bg.softuni.kickboxing.model.dto.news.AddNewsDTO;
 import bg.softuni.kickboxing.model.dto.news.NewsDTO;
 import bg.softuni.kickboxing.model.entity.NewsEntity;
@@ -10,6 +9,7 @@ import bg.softuni.kickboxing.model.enums.UserRoleEnum;
 import bg.softuni.kickboxing.model.exception.ObjectNotFoundException;
 import bg.softuni.kickboxing.repository.NewsRepository;
 import bg.softuni.kickboxing.repository.UserRepository;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.function.Executable;
@@ -52,11 +52,26 @@ public class NewsServiceTest {
     @Mock
     private Pageable pageable;
 
+    private static NewsEntity news;
+    private static AddNewsDTO addNewsDto;
+    private static NewsDTO newsDto;
+    private static List<NewsDTO> newsDtoList;
+    private static PageImpl<NewsDTO> expectedNewsPage;
+    private static List<NewsEntity> newsEntityList;
+
+    @BeforeAll
+    static void setUp() {
+        news = initNews();
+        addNewsDto = initAddNewsDto();
+        newsDto = initNewsDto();
+        newsDtoList = List.of(initNewsDto(), initNewsDto());
+        expectedNewsPage = new PageImpl<>(newsDtoList);
+        newsEntityList = List.of(initNews(), initNews());
+    }
+
     @Test
     void testAddNews_ShouldAddNews_WhenCorrectNews() {
-        AddNewsDTO addNewsDTO = initAddNewsDto();
-        NewsEntity news = initNews();
-        when(this.mapper.map(addNewsDTO, NewsEntity.class))
+        when(this.mapper.map(addNewsDto, NewsEntity.class))
                 .thenReturn(news);
 
         UserEntity user = initUser();
@@ -68,29 +83,24 @@ public class NewsServiceTest {
         when(this.newsRepository.save(news))
                 .thenReturn(news);
 
-        this.newsService.addNews(addNewsDTO, this.userDetails);
+        this.newsService.addNews(addNewsDto, this.userDetails);
 
         verify(this.newsRepository, times(1)).save(news);
     }
 
     @Test
     void testAddNews_ShouldThrowException_WhenIncorrectAuthor() {
-        AddNewsDTO addNewsDTO = initAddNewsDto();
-        NewsEntity news = initNews();
-        when(this.mapper.map(addNewsDTO, NewsEntity.class))
+        when(this.mapper.map(addNewsDto, NewsEntity.class))
                 .thenReturn(news);
 
         when(this.userDetails.getUsername())
                 .thenThrow(RuntimeException.class);
 
-        assertThrows(RuntimeException.class, () -> this.newsService.addNews(addNewsDTO, this.userDetails));
+        assertThrows(RuntimeException.class, () -> this.newsService.addNews(addNewsDto, this.userDetails));
     }
 
     @Test
     void testGetAllNewsOrderedByDateDesc_ShouldReturnAListOfAllNewsDto() {
-        List<NewsDTO> news = List.of(initNewsDto(), initNewsDto());
-        PageImpl<NewsDTO> expectedNewsPage = new PageImpl<>(news);
-
         when(this.newsRepository.findAllByOrderByCreatedOnDescIdDesc(this.pageable))
                 .thenReturn(expectedNewsPage);
 
@@ -101,50 +111,47 @@ public class NewsServiceTest {
 
     @Test
     void testGetAllTrendingNewsOrderedByDateDesc_ShouldReturnCorrectNews() {
-        List<NewsDTO> expectedNews = List.of(initNewsDto(), initNewsDto());
-
         when(this.newsRepository.findTrendingNewsOrderByCreatedOnDescIdDesc())
-                .thenReturn(expectedNews);
+                .thenReturn(newsDtoList);
 
         List<NewsDTO> actualNews = this.newsService.getAllTrendingNewsOrderedByDateDesc();
 
-        assertIterableEquals(expectedNews, actualNews);
+        assertIterableEquals(newsDtoList, actualNews);
     }
 
     @ParameterizedTest
     @CsvSource(value = {"1", "2", "3", "4"})
     void testGetNewsById_ShouldReturnCorrectNews_WhenNewsIdIsValid(Long id) {
-        NewsEntity news = initNews();
-
         when(this.newsRepository.findById(id))
                 .thenReturn(Optional.of(news));
 
-        NewsDTO newsDTO = initNewsDto();
         when(this.mapper.map(news, NewsDTO.class))
-                .thenReturn(newsDTO);
+                .thenReturn(newsDto);
 
         NewsDTO newsById = this.newsService.getNewsById(id);
 
-        assertEquals(newsDTO.getId(), newsById.getId());
-        assertEquals(newsDTO.getTitle(), newsById.getTitle());
-        assertEquals(newsDTO.getContent(), newsById.getContent());
-        assertEquals(newsDTO.getImageUrl(), newsById.getImageUrl());
-        assertEquals(newsDTO.getViews(), newsById.getViews());
-        assertEquals(newsDTO.getCreatedOn(), newsById.getCreatedOn());
+        assertAll(
+                () -> assertEquals(newsDto.getId(), newsById.getId()),
+                () -> assertEquals(newsDto.getTitle(), newsById.getTitle()),
+                () -> assertEquals(newsDto.getContent(), newsById.getContent()),
+                () -> assertEquals(newsDto.getImageUrl(), newsById.getImageUrl()),
+                () -> assertEquals(newsDto.getViews(), newsById.getViews()),
+                () -> assertEquals(newsDto.getCreatedOn(), newsById.getCreatedOn())
+        );
     }
 
     @ParameterizedTest
     @CsvSource(value = {"-1", "-2", "-3", "-4"})
     void testGetNewsById_ShouldThrowException_WhenNewsIdIsInvalid(Long id) {
-        assertThrows(ObjectNotFoundException.class, () -> this.newsService.getNewsById(id));
+        Executable executable = () -> this.newsService.getNewsById(id);
+
+        assertThrows(ObjectNotFoundException.class, executable);
     }
 
     @ParameterizedTest
     @CsvSource(value = {"1", "2", "3", "4"})
     void testDeleteNews_ShouldDeleteNews(Long id) {
-        NewsEntity news = initNews();
         news.setId(id);
-
         when(this.newsRepository.findTopByOrderByIdDesc())
                 .thenReturn(news);
 
@@ -156,20 +163,18 @@ public class NewsServiceTest {
     @ParameterizedTest
     @CsvSource(value = {"2", "3", "4"})
     void testDeleteNews_ShouldThrowException_WhenNewsIdIsOutOfBounds(Long id) {
-        NewsEntity news = initNews();
         news.setId(1L);
-
         when(this.newsRepository.findTopByOrderByIdDesc())
                 .thenReturn(news);
 
-        assertThrows(ObjectNotFoundException.class, () -> this.newsService.deleteNews(id));
+        Executable executable = () -> this.newsService.deleteNews(id);
+
+        assertThrows(ObjectNotFoundException.class, executable);
     }
 
     @Test
     void testGetIdOfLastObjectInTable_ShouldReturnIdOfLastObject() {
-        NewsEntity news = initNews();
         news.setId(1L);
-
         when(this.newsRepository.findTopByOrderByIdDesc())
                 .thenReturn(news);
 
@@ -181,8 +186,6 @@ public class NewsServiceTest {
     @ParameterizedTest
     @CsvSource(value = {"1", "2", "3", "4"})
     void testIncreaseViewsCount_ShouldIncreaseViewCountOfNews_WhenCorrectNewsIdIsPassed(Long id) {
-        NewsEntity news = initNews();
-
         when(this.newsRepository.findById(id))
                 .thenReturn(Optional.of(news));
 
@@ -197,22 +200,22 @@ public class NewsServiceTest {
         when(this.newsRepository.findById(id))
                 .thenThrow(RuntimeException.class);
 
-        assertThrows(RuntimeException.class, () -> this.newsService.increaseViewsCount(id));
+        Executable executable = () -> this.newsService.increaseViewsCount(id);
+
+        assertThrows(RuntimeException.class, executable);
     }
 
     @Test
     void testResetViews_ShouldResetViewsOfAllNews() {
-        List<NewsEntity> news = List.of(initNews(), initNews());
-
         when(this.newsRepository.findAll())
-                .thenReturn(news);
+                .thenReturn(newsEntityList);
 
         this.newsService.resetViews();
 
-        news.forEach(n -> verify(this.newsRepository, times(1)).save(n));
+        newsEntityList.forEach(n -> verify(this.newsRepository, times(1)).save(n));
     }
 
-    private NewsEntity initNews() {
+    private static NewsEntity initNews() {
         return new NewsEntity()
                 .setTitle("Title")
                 .setContent("Content")
@@ -222,7 +225,7 @@ public class NewsServiceTest {
                 .setAuthor(initUser());
     }
 
-    private UserEntity initUser() {
+    private static UserEntity initUser() {
         return new UserEntity()
                 .setUsername("TestUsername")
                 .setFirstName("Test")
@@ -236,7 +239,7 @@ public class NewsServiceTest {
                         new UserRoleEntity(UserRoleEnum.USER)));
     }
 
-    private AddNewsDTO initAddNewsDto() {
+    private static AddNewsDTO initAddNewsDto() {
         AddNewsDTO addNewsDTO = new AddNewsDTO();
         addNewsDTO.setContent("Content");
         addNewsDTO.setTitle("Title");
@@ -244,7 +247,7 @@ public class NewsServiceTest {
         return addNewsDTO;
     }
 
-    private NewsDTO initNewsDto() {
+    private static NewsDTO initNewsDto() {
         return new NewsDTO(
                 1L, "Title", "Content", "image:/url", 1, LocalDate.now()
         );

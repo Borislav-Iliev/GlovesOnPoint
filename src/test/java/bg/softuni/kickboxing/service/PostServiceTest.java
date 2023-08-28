@@ -14,6 +14,7 @@ import bg.softuni.kickboxing.model.exception.ObjectNotFoundException;
 import bg.softuni.kickboxing.model.user.GlovesOnPointUserDetails;
 import bg.softuni.kickboxing.repository.PostRepository;
 import bg.softuni.kickboxing.repository.UserRepository;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.function.Executable;
@@ -55,15 +56,28 @@ public class PostServiceTest {
     @Mock
     private GlovesOnPointUserDetails userDetails;
 
+    private static PostEntity post;
+    private static AddPostDTO addPostDto;
+    private static PostDetailsDTO postDetailsDto;
+    private static UserEntity user;
+    private static Page<PostDTO> expectedPostsPage;
+
+    @BeforeAll
+    static void setUp() {
+        post = initPost();
+        addPostDto = initAddPostDto();
+        postDetailsDto = initPostDetailsDto();
+        user = initUser();
+        List<PostDTO> posts = List.of(initPostDto());
+        expectedPostsPage = new PageImpl<>(posts);
+    }
+
     @ParameterizedTest
     @CsvSource(value = {"ADMIN", "MODERATOR"})
     void testAddPost_ShouldSetApprovedToTrueAndAddPost_WhenUserIsAdminOrModeratorAndCorrectDataIsPassed(String role) {
-        AddPostDTO addPostDTO = initAddPostDto();
-        PostEntity post = initPost();
-        when(this.mapper.map(addPostDTO, PostEntity.class))
+        when(this.mapper.map(addPostDto, PostEntity.class))
                 .thenReturn(post);
 
-        UserEntity user = initUser();
         when(this.userDetails.getUsername())
                 .thenReturn("Username");
         when(this.userRepository.findByUsername(this.userDetails.getUsername()))
@@ -72,7 +86,7 @@ public class PostServiceTest {
         when(this.userDetails.getRole())
                 .thenReturn(role);
 
-        this.postService.addPost(addPostDTO, this.userDetails);
+        this.postService.addPost(addPostDto, this.userDetails);
 
         assertTrue(post.isApproved());
         verify(this.postRepository, times(1)).save(post);
@@ -81,12 +95,10 @@ public class PostServiceTest {
     @ParameterizedTest
     @CsvSource(value = {"USER"})
     void testAddPost_ShouldSetApprovedToFalseAndAddPost_WhenUserIsANormalUserAndCorrectDataIsPassed(String role) {
-        AddPostDTO addPostDTO = initAddPostDto();
-        PostEntity post = initPost();
-        when(this.mapper.map(addPostDTO, PostEntity.class))
+        post = initPost();
+        when(this.mapper.map(addPostDto, PostEntity.class))
                 .thenReturn(post);
 
-        UserEntity user = initUser();
         when(this.userDetails.getUsername())
                 .thenReturn("Username");
         when(this.userRepository.findByUsername(this.userDetails.getUsername()))
@@ -95,7 +107,7 @@ public class PostServiceTest {
         when(this.userDetails.getRole())
                 .thenReturn(role);
 
-        this.postService.addPost(addPostDTO, this.userDetails);
+        this.postService.addPost(addPostDto, this.userDetails);
 
         assertFalse(post.isApproved());
         verify(this.postRepository, times(1)).save(post);
@@ -103,9 +115,6 @@ public class PostServiceTest {
 
     @Test
     void testGetAllApprovedPostsOrderedByDateDesc_ShouldReturnCorrectPageOfPosts() {
-        List<PostDTO> posts = List.of(initPostDto());
-        Page<PostDTO> expectedPostsPage = new PageImpl<>(posts);
-
         when(this.postRepository.getAllApprovedPostsOrderedByCreatedOnDesc(this.pageable))
                 .thenReturn(expectedPostsPage);
 
@@ -116,18 +125,13 @@ public class PostServiceTest {
 
     @Test
     void testAddPost_ShouldThrowException_WhenUserHasAnyRoleAndUserCannotBeFound() {
-        AddPostDTO addPostDTO = initAddPostDto();
-
-        Executable executable = () -> this.postService.addPost(addPostDTO, this.userDetails);
+        Executable executable = () -> this.postService.addPost(addPostDto, this.userDetails);
 
         assertThrows(RuntimeException.class, executable);
     }
 
     @Test
     void testGetAllApprovedPostsByCategoryOrderedByCreatedOnDesc_ShouldReturnCorrectPageOfPosts() {
-        List<PostDTO> posts = List.of(initPostDto());
-        Page<PostDTO> expectedPostsPage = new PageImpl<>(posts);
-
         when(this.postRepository.getAllApprovedPostsByCategoryOrderedByCreatedOnDesc(this.pageable, PostCategoryEnum.ARTICLE))
                 .thenReturn(expectedPostsPage);
 
@@ -140,9 +144,6 @@ public class PostServiceTest {
     @ParameterizedTest
     @CsvSource(value = {"T", "Ti", "I"})
     void testGetAllApprovedPostsWhereTitleLike_ShouldReturnCorrectPageOfPosts(String title) {
-        List<PostDTO> posts = List.of(initPostDto());
-        Page<PostDTO> expectedPostsPage = new PageImpl<>(posts);
-
         when(this.postRepository.getAllApprovedPostsWhereTitleLike(this.pageable, title))
                 .thenReturn(expectedPostsPage);
 
@@ -154,9 +155,6 @@ public class PostServiceTest {
 
     @Test
     void testGetAllNotApprovedPostsOrderedByDateDesc_ShouldReturnCorrectPageOfPosts() {
-        List<PostDTO> posts = List.of(initPostDto());
-        Page<PostDTO> expectedPostsPage = new PageImpl<>(posts);
-
         when(this.postRepository.getAllNotApprovedPostsOrderedByCreatedOnDesc(this.pageable))
                 .thenReturn(expectedPostsPage);
 
@@ -169,53 +167,56 @@ public class PostServiceTest {
     @ParameterizedTest
     @CsvSource(value = {"1", "2", "3", "4"})
     void testFindById_ShouldReturnCorrectPost_WhenCorrectPostIdIsPassed(Long id) {
-        PostEntity expectedPost = initPost();
-        expectedPost.setId(id);
+        post.setId(id);
 
         when(this.postRepository.findById(id))
-                .thenReturn(Optional.of(expectedPost));
+                .thenReturn(Optional.of(post));
 
         PostEntity actualPost = this.postService.findById(id);
 
-        assertEquals(expectedPost.getId(), actualPost.getId());
-        assertEquals(expectedPost.getTitle(), actualPost.getTitle());
-        assertEquals(expectedPost.getContent(), actualPost.getContent());
-        assertEquals(expectedPost.getCategory(), actualPost.getCategory());
-        assertEquals(expectedPost.getViews(), actualPost.getViews());
-        assertEquals(expectedPost.getCreatedOn(), actualPost.getCreatedOn());
-        assertEquals(expectedPost.isApproved(), actualPost.isApproved());
-        assertIterableEquals(expectedPost.getComments(), actualPost.getComments());
-        assertSame(expectedPost.getAuthor(), actualPost.getAuthor());
+        assertAll(
+                () -> assertEquals(post.getId(), actualPost.getId()),
+                () -> assertEquals(post.getTitle(), actualPost.getTitle()),
+                () -> assertEquals(post.getContent(), actualPost.getContent()),
+                () -> assertEquals(post.getCategory(), actualPost.getCategory()),
+                () -> assertEquals(post.getViews(), actualPost.getViews()),
+                () -> assertEquals(post.getCreatedOn(), actualPost.getCreatedOn()),
+                () -> assertEquals(post.isApproved(), actualPost.isApproved()),
+                () -> assertIterableEquals(post.getComments(), actualPost.getComments()),
+                () -> assertSame(post.getAuthor(), actualPost.getAuthor())
+        );
     }
 
     @ParameterizedTest
     @CsvSource(value = {"-1", "-2", "-3", "-4"})
     void testFindById_ShouldThrowException_WhenIncorrectPostIdIsPassed(Long id) {
-        assertThrows(ObjectNotFoundException.class, () -> this.postService.findById(id));
+        Executable executable = () -> this.postService.findById(id);
+
+        assertThrows(ObjectNotFoundException.class, executable);
     }
 
     @ParameterizedTest
     @CsvSource(value = {"1", "2", "3", "4"})
     void testGetPostDetailsById_ShouldReturnCorrectPost_WhenValidPostIdIsPassed(Long id) {
-        PostEntity post = initPost();
         when(this.postRepository.findById(id))
                 .thenReturn(Optional.of(post));
 
-        PostDetailsDTO postDetailsDto = initPostDetailsDto();
         when(this.mapper.map(post, PostDetailsDTO.class))
                 .thenReturn(postDetailsDto);
 
         PostDetailsDTO actualPostDetailsDto = this.postService.getPostDetailsById(id);
 
-        assertEquals(postDetailsDto.getId(), actualPostDetailsDto.getId());
-        assertEquals(postDetailsDto.getTitle(), actualPostDetailsDto.getTitle());
-        assertEquals(postDetailsDto.getContent(), actualPostDetailsDto.getContent());
-        assertEquals(postDetailsDto.getCategory(), actualPostDetailsDto.getCategory());
-        assertEquals(postDetailsDto.getViews(), actualPostDetailsDto.getViews());
-        assertEquals(postDetailsDto.getCreatedOn(), actualPostDetailsDto.getCreatedOn());
-        assertIterableEquals(postDetailsDto.getComments(), actualPostDetailsDto.getComments());
-        assertEquals(postDetailsDto.getAuthorUsername(), actualPostDetailsDto.getAuthorUsername());
-        assertEquals(postDetailsDto.getAuthorImageUrl(), actualPostDetailsDto.getAuthorImageUrl());
+        assertAll(
+                () -> assertEquals(postDetailsDto.getId(), actualPostDetailsDto.getId()),
+                () -> assertEquals(postDetailsDto.getTitle(), actualPostDetailsDto.getTitle()),
+                () -> assertEquals(postDetailsDto.getContent(), actualPostDetailsDto.getContent()),
+                () -> assertEquals(postDetailsDto.getCategory(), actualPostDetailsDto.getCategory()),
+                () -> assertEquals(postDetailsDto.getViews(), actualPostDetailsDto.getViews()),
+                () -> assertEquals(postDetailsDto.getCreatedOn(), actualPostDetailsDto.getCreatedOn()),
+                () -> assertIterableEquals(postDetailsDto.getComments(), actualPostDetailsDto.getComments()),
+                () -> assertEquals(postDetailsDto.getAuthorUsername(), actualPostDetailsDto.getAuthorUsername()),
+                () -> assertEquals(postDetailsDto.getAuthorImageUrl(), actualPostDetailsDto.getAuthorImageUrl())
+        );
     }
 
     @ParameterizedTest
@@ -229,7 +230,6 @@ public class PostServiceTest {
     @ParameterizedTest
     @CsvSource(value = {"1", "2", "3", "4"})
     void testIncreaseViewsCount_ShouldIncreaseViewsCountOfPost_WhenValidPostIdIsPassed(Long id) {
-        PostEntity post = initPost();
         when(this.postRepository.findById(id))
                 .thenReturn(Optional.of(post));
 
@@ -252,7 +252,6 @@ public class PostServiceTest {
     @ParameterizedTest
     @CsvSource(value = {"1", "2", "3", "4"})
     void testApprovePost_ShouldSetApprovedToTrueAndSavePost_WhenValidPostIdIsPassed(Long id) {
-        PostEntity post = initPost();
         when(this.postRepository.findById(id))
                 .thenReturn(Optional.of(post));
 
@@ -266,13 +265,13 @@ public class PostServiceTest {
     @CsvSource(value = {"-1", "-2", "-3", "-4"})
     void testApprovePost_ShouldThrowException_WhenInvalidPostIdIsPassed(Long id) {
         Executable executable = () -> this.postService.approvePost(id);
+
         assertThrows(ObjectNotFoundException.class, executable);
     }
 
     @ParameterizedTest
     @CsvSource(value = {"1", "2", "3", "4"})
     void testDisapprovePost_ShouldDeletePost_WhenValidPostIdIsPassed(Long id) {
-        PostEntity post = initPost();
         post.setId(id);
         when(this.postRepository.findTopByOrderByIdDesc())
                 .thenReturn(post);
@@ -285,7 +284,6 @@ public class PostServiceTest {
     @ParameterizedTest
     @CsvSource(value = {"3", "4"})
     void testDisapprovePost_ShouldThrowException_WhenInvalidPostIdIsPassed(Long id) {
-        PostEntity post = initPost();
         post.setId(2L);
         when(this.postRepository.findTopByOrderByIdDesc())
                 .thenReturn(post);
@@ -298,7 +296,6 @@ public class PostServiceTest {
     @ParameterizedTest
     @CsvSource(value = {"1", "2", "3", "4"})
     void testGetIdOfLastObjectInTable_ShouldReturnIdOfLastObject(Long id) {
-        PostEntity post = initPost();
         post.setId(id);
         when(this.postRepository.findTopByOrderByIdDesc())
                 .thenReturn(post);
@@ -308,7 +305,7 @@ public class PostServiceTest {
         assertEquals(post.getId(), actualLastId);
     }
 
-    private PostEntity initPost() {
+    private static PostEntity initPost() {
         return new PostEntity()
                 .setTitle("Title")
                 .setContent("Content")
@@ -320,7 +317,7 @@ public class PostServiceTest {
                 .setAuthor(initUser());
     }
 
-    private CommentEntity initComment() {
+    private static CommentEntity initComment() {
         return new CommentEntity()
                 .setContent("Content")
                 .setApproved(false)
@@ -329,7 +326,7 @@ public class PostServiceTest {
                 .setAuthor(initUser());
     }
 
-    private UserEntity initUser() {
+    private static UserEntity initUser() {
         return new UserEntity()
                 .setUsername("TestUsername")
                 .setFirstName("Test")
@@ -343,7 +340,7 @@ public class PostServiceTest {
                         new UserRoleEntity(UserRoleEnum.USER)));
     }
 
-    private AddPostDTO initAddPostDto() {
+    private static AddPostDTO initAddPostDto() {
         AddPostDTO addPostDTO = new AddPostDTO();
         addPostDTO.setTitle("Title");
         addPostDTO.setContent("Content");
@@ -351,21 +348,21 @@ public class PostServiceTest {
         return addPostDTO;
     }
 
-    private PostDTO initPostDto() {
+    private static PostDTO initPostDto() {
         return new PostDTO(
                 1L, "Username", "image:/url", 1L,
                 "Title", PostCategoryEnum.ARTICLE, 1, LocalDateTime.now()
         );
     }
 
-    private PostDetailsDTO initPostDetailsDto() {
+    private static PostDetailsDTO initPostDetailsDto() {
         return new PostDetailsDTO(
                 1L, "Title", "Content", PostCategoryEnum.ARTICLE, 1,
                 LocalDateTime.now(), List.of(initCommentDto()), "Username", "image:/url"
         );
     }
 
-    private CommentDTO initCommentDto() {
+    private static CommentDTO initCommentDto() {
         return new CommentDTO(
                 1L, "Content", LocalDateTime.now(), "Username", "image:/url"
         );

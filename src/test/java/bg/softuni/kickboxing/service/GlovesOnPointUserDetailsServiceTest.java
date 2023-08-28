@@ -5,10 +5,11 @@ import bg.softuni.kickboxing.model.entity.UserRoleEntity;
 import bg.softuni.kickboxing.model.enums.UserRoleEnum;
 import bg.softuni.kickboxing.model.user.GlovesOnPointUserDetails;
 import bg.softuni.kickboxing.repository.UserRepository;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.function.Executable;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -19,22 +20,60 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyString;
+
 @ExtendWith(MockitoExtension.class)
 public class GlovesOnPointUserDetailsServiceTest {
 
     @Mock
     private UserRepository mockUserRepository;
 
-    private GlovesOnPointUserDetailsService toTest;
+    @InjectMocks
+    private GlovesOnPointUserDetailsService glovesOnPointUserDetailsService;
 
-    @BeforeEach
-    public void setUp() {
-        this.toTest = new GlovesOnPointUserDetailsService(mockUserRepository);
+    private static UserEntity user;
+
+    @BeforeAll
+    static void setUp() {
+        user = initUser();
     }
 
     @Test
-    public void testLoadUserByUsername_UserExists() {
-        UserEntity testUserEntity = new UserEntity()
+    public void testLoadUserByUsername_WhenUserExists() {
+        Mockito.when(this.mockUserRepository.findByUsername(anyString()))
+                .thenReturn(Optional.of(user));
+
+        GlovesOnPointUserDetails userDetails = (GlovesOnPointUserDetails)
+                this.glovesOnPointUserDetailsService.loadUserByUsername(anyString());
+
+        assertAll(
+                () -> assertEquals(user.getId(), userDetails.getId()),
+                () -> assertEquals(user.getUsername(), userDetails.getUsername()),
+                () -> assertEquals(user.getFirstName(), userDetails.getFirstName()),
+                () -> assertEquals(user.getLastName(), userDetails.getLastName()),
+                () -> assertEquals(user.getEmail(), userDetails.getEmail()),
+                () -> assertEquals(user.getPassword(), userDetails.getPassword()),
+                () -> assertEquals(user.getImageUrl(), userDetails.getImageUrl()),
+                () -> assertEquals(user.getFirstName() + " " + user.getLastName(), userDetails.getFullName()),
+                () -> assertEquals(user.getPosts(), userDetails.getPosts()),
+                () -> assertEquals(user.getComments(), userDetails.getComments())
+        );
+
+        String expectedRoles = "ROLE_ADMIN, ROLE_MODERATOR, ROLE_USER";
+        String actualRoles = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining(", "));
+        assertEquals(expectedRoles, actualRoles);
+    }
+
+    @Test
+    public void testLoadUserByUsername_ShouldThrowException_WhenUserNotFound() {
+        Executable executable = () -> this.glovesOnPointUserDetailsService.loadUserByUsername(anyString());
+
+        assertThrows(UsernameNotFoundException.class, executable);
+    }
+
+    private static UserEntity initUser() {
+        return new UserEntity()
                 .setUsername("TestUsername")
                 .setFirstName("Test")
                 .setLastName("Test")
@@ -45,31 +84,5 @@ public class GlovesOnPointUserDetailsServiceTest {
                 .setUserRoles(List.of(new UserRoleEntity(UserRoleEnum.ADMIN),
                         new UserRoleEntity(UserRoleEnum.MODERATOR),
                         new UserRoleEntity(UserRoleEnum.USER)));
-
-        Mockito.when(this.mockUserRepository.findByUsername(testUserEntity.getUsername()))
-                .thenReturn(Optional.of(testUserEntity));
-
-        GlovesOnPointUserDetails userDetails = (GlovesOnPointUserDetails)
-                this.toTest.loadUserByUsername("TestUsername");
-
-        Assertions.assertEquals(testUserEntity.getId(), userDetails.getId());
-        Assertions.assertEquals(testUserEntity.getUsername(), userDetails.getUsername());
-        Assertions.assertEquals(testUserEntity.getFirstName(), userDetails.getFirstName());
-        Assertions.assertEquals(testUserEntity.getLastName(), userDetails.getLastName());
-        Assertions.assertEquals(testUserEntity.getEmail(), userDetails.getEmail());
-        Assertions.assertEquals(testUserEntity.getPassword(), userDetails.getPassword());
-        Assertions.assertEquals(testUserEntity.getImageUrl(), userDetails.getImageUrl());
-        Assertions.assertEquals(testUserEntity.getFirstName() + " " + testUserEntity.getLastName(), userDetails.getFullName());
-        Assertions.assertEquals(testUserEntity.getPosts(), userDetails.getPosts());
-        Assertions.assertEquals(testUserEntity.getComments(), userDetails.getComments());
-
-        String expectedRoles = "ROLE_ADMIN, ROLE_MODERATOR, ROLE_USER";
-        String actualRoles = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining(", "));
-        Assertions.assertEquals(expectedRoles, actualRoles);
-    }
-
-    @Test
-    public void testLoadUserByUsername_UserNotFound() {
-        Assertions.assertThrows(UsernameNotFoundException.class, () -> this.toTest.loadUserByUsername("not_existing_username"));
     }
 }
