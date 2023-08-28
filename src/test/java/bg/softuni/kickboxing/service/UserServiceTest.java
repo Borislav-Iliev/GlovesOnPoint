@@ -63,12 +63,14 @@ public class UserServiceTest {
     @Mock
     private GlovesOnPointUserDetails userDetails;
 
-    static UserEntity user;
-    static UserRegistrationDTO userRegistrationDto;
-    static UserDTO userDto;
+    private static List<TopUserDTO> topUsers;
+    private static UserEntity user;
+    private static UserRegistrationDTO userRegistrationDto;
+    private static UserDTO userDto;
 
     @BeforeAll
     static void setUp() {
+        topUsers = List.of(initTopUserDto(), initTopUserDto());
         user = initUser();
         userRegistrationDto = initUserRegistrationDto();
         userDto = initUserDto();
@@ -108,15 +110,17 @@ public class UserServiceTest {
 
         UserDTO expectedUserDto = this.userService.getUserDTOByUsername(username);
 
-        assertEquals(userDto.getId(), expectedUserDto.getId());
-        assertEquals(userDto.getUsername(), expectedUserDto.getUsername());
-        assertEquals(userDto.getEmail(), expectedUserDto.getEmail());
-        assertEquals(userDto.getFirstName(), expectedUserDto.getFirstName());
-        assertEquals(userDto.getLastName(), expectedUserDto.getLastName());
-        assertEquals(userDto.getImageUrl(), expectedUserDto.getImageUrl());
-        assertIterableEquals(userDto.getUserRoles(), expectedUserDto.getUserRoles());
-        assertIterableEquals(userDto.getPosts(), expectedUserDto.getPosts());
-        assertIterableEquals(userDto.getComments(), expectedUserDto.getComments());
+        assertAll(
+                () -> assertEquals(userDto.getId(), expectedUserDto.getId()),
+                () -> assertEquals(userDto.getUsername(), expectedUserDto.getUsername()),
+                () -> assertEquals(userDto.getEmail(), expectedUserDto.getEmail()),
+                () -> assertEquals(userDto.getFirstName(), expectedUserDto.getFirstName()),
+                () -> assertEquals(userDto.getLastName(), expectedUserDto.getLastName()),
+                () -> assertEquals(userDto.getImageUrl(), expectedUserDto.getImageUrl()),
+                () -> assertIterableEquals(userDto.getUserRoles(), expectedUserDto.getUserRoles()),
+                () -> assertIterableEquals(userDto.getPosts(), expectedUserDto.getPosts()),
+                () -> assertIterableEquals(userDto.getComments(), expectedUserDto.getComments())
+        );
     }
 
     @ParameterizedTest
@@ -137,31 +141,31 @@ public class UserServiceTest {
 
         UserDTO expectedUserDto = this.userService.getUserDTOById("Username");
 
-        assertEquals(userDto.getId(), expectedUserDto.getId());
-        assertEquals(userDto.getUsername(), expectedUserDto.getUsername());
-        assertEquals(userDto.getEmail(), expectedUserDto.getEmail());
-        assertEquals(userDto.getFirstName(), expectedUserDto.getFirstName());
-        assertEquals(userDto.getLastName(), expectedUserDto.getLastName());
-        assertEquals(userDto.getImageUrl(), expectedUserDto.getImageUrl());
-        assertIterableEquals(userDto.getUserRoles(), expectedUserDto.getUserRoles());
-        assertIterableEquals(userDto.getPosts(), expectedUserDto.getPosts());
-        assertIterableEquals(userDto.getComments(), expectedUserDto.getComments());
+        assertAll(
+                () -> assertEquals(userDto.getId(), expectedUserDto.getId()),
+                () -> assertEquals(userDto.getUsername(), expectedUserDto.getUsername()),
+                () -> assertEquals(userDto.getEmail(), expectedUserDto.getEmail()),
+                () -> assertEquals(userDto.getFirstName(), expectedUserDto.getFirstName()),
+                () -> assertEquals(userDto.getLastName(), expectedUserDto.getLastName()),
+                () -> assertEquals(userDto.getImageUrl(), expectedUserDto.getImageUrl()),
+                () -> assertIterableEquals(userDto.getUserRoles(), expectedUserDto.getUserRoles()),
+                () -> assertIterableEquals(userDto.getPosts(), expectedUserDto.getPosts()),
+                () -> assertIterableEquals(userDto.getComments(), expectedUserDto.getComments())
+        );
     }
 
     @Test
     void testGetUserDTOById_ShouldThrowException_WhenInvalidUserIdIsPassed() {
-        when(this.userRepository.findByUsername("Username"))
+        when(this.userRepository.findByUsername(anyString()))
                 .thenThrow(RuntimeException.class);
 
-        Executable executable = () -> this.userService.getUserDTOById("Username");
+        Executable executable = () -> this.userService.getUserDTOById(anyString());
 
         assertThrows(RuntimeException.class, executable);
     }
 
     @Test
     void testGetTopProfiles_ShouldReturnCorrectListOfTopUserDto() {
-        List<TopUserDTO> topUsers = List.of(initTopUserDto(), initTopUserDto());
-
         when(this.userRepository.getAllDistinctByOrderByPostsDesc())
                 .thenReturn(topUsers);
 
@@ -234,11 +238,13 @@ public class UserServiceTest {
 
         this.userService.editProfile(editUserDto, username);
 
-        assertEquals(user.getUsername(), editUserDto.getUsername());
-        assertEquals(user.getFirstName(), editUserDto.getFirstName());
-        assertEquals(user.getLastName(), editUserDto.getLastName());
-        assertEquals(user.getImageUrl(), editUserDto.getImageUrl());
-        assertEquals(user.getPassword(), editUserDto.getPassword());
+        assertAll(
+                () -> assertEquals(user.getUsername(), editUserDto.getUsername()),
+                () -> assertEquals(user.getFirstName(), editUserDto.getFirstName()),
+                () -> assertEquals(user.getLastName(), editUserDto.getLastName()),
+                () -> assertEquals(user.getImageUrl(), editUserDto.getImageUrl()),
+                () -> assertEquals(user.getPassword(), editUserDto.getPassword())
+        );
         verify(this.userRepository, times(1)).save(user);
     }
 
@@ -257,11 +263,13 @@ public class UserServiceTest {
 
         this.userService.editProfile(editUserDto, username);
 
-        assertNotEquals(user.getUsername(), editUserDto.getUsername());
-        assertNotEquals(user.getFirstName(), editUserDto.getFirstName());
-        assertNotEquals(user.getLastName(), editUserDto.getLastName());
-        assertNotEquals(user.getImageUrl(), editUserDto.getImageUrl());
-        assertNotEquals(user.getPassword(), editUserDto.getPassword());
+        assertAll(
+                () -> assertNotEquals(user.getUsername(), editUserDto.getUsername()),
+                () -> assertNotEquals(user.getFirstName(), editUserDto.getFirstName()),
+                () -> assertNotEquals(user.getLastName(), editUserDto.getLastName()),
+                () -> assertNotEquals(user.getImageUrl(), editUserDto.getImageUrl()),
+                () -> assertNotEquals(user.getPassword(), editUserDto.getPassword())
+        );
         verify(this.userRepository, times(1)).save(user);
     }
 
@@ -359,7 +367,7 @@ public class UserServiceTest {
                 .setAuthor(null);
     }
 
-    private TopUserDTO initTopUserDto() {
+    private static TopUserDTO initTopUserDto() {
         return new TopUserDTO(
                 "Username", "FirstName", "LastName", 1, 1
         );

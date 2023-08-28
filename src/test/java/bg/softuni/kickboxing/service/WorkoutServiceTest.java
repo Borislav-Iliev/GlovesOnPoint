@@ -53,16 +53,15 @@ public class WorkoutServiceTest {
     @Mock
     private GlovesOnPointUserDetails userDetails;
 
-    static List<WorkoutDTO> workouts;
-    static Page<WorkoutDTO> expectedWorkoutsPage;
-
+    private static Page<WorkoutDTO> expectedWorkoutsPage;
     private static WorkoutEntity workout;
     private static WorkoutDTO workoutDto;
     private static AddWorkoutDTO addWorkoutDto;
     private static UserEntity user;
+
     @BeforeAll
     static void setUp() {
-        workouts = List.of(initWorkoutDto(), initWorkoutDto());
+        List<WorkoutDTO> workouts = List.of(initWorkoutDto(), initWorkoutDto());
         expectedWorkoutsPage = new PageImpl<>(workouts);
         workout = initWorkout();
         workoutDto = initWorkoutDto();
@@ -153,12 +152,14 @@ public class WorkoutServiceTest {
 
         WorkoutDTO actualWorkoutDto = this.workoutService.getWorkoutById(id);
 
-        assertEquals(workoutDto.getId(), actualWorkoutDto.getId());
-        assertEquals(workoutDto.getTitle(), actualWorkoutDto.getTitle());
-        assertEquals(workoutDto.getLevel(), actualWorkoutDto.getLevel());
-        assertEquals(workoutDto.getType(), actualWorkoutDto.getType());
-        assertEquals(workoutDto.getContent(), actualWorkoutDto.getContent());
-        assertEquals(workoutDto.getImageUrl(), actualWorkoutDto.getImageUrl());
+        assertAll(
+                () -> assertEquals(workoutDto.getId(), actualWorkoutDto.getId()),
+                () -> assertEquals(workoutDto.getTitle(), actualWorkoutDto.getTitle()),
+                () -> assertEquals(workoutDto.getLevel(), actualWorkoutDto.getLevel()),
+                () -> assertEquals(workoutDto.getType(), actualWorkoutDto.getType()),
+                () -> assertEquals(workoutDto.getContent(), actualWorkoutDto.getContent()),
+                () -> assertEquals(workoutDto.getImageUrl(), actualWorkoutDto.getImageUrl())
+        );
     }
 
     @ParameterizedTest
